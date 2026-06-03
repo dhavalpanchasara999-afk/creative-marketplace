@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { connectToDatabase, Product, Order, User } from '..\..\..\lib/db';
-import { getAuthenticatedUser } from '..\..\..\lib/auth';
+import { connectToDatabase, Product, Order, User } from '../../../lib/db';
+import { getAuthenticatedUser } from '../../../lib/auth';
 
 // POST PAYMENT SUBMISSION - Logs verified checkout purchases
 export async function POST(req) {

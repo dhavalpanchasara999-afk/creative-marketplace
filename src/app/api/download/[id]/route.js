@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { connectToDatabase, User, Product } from '..\..\..\..\lib/db';
-import { getAuthenticatedUser } from '..\..\..\..\lib/auth';
+import { connectToDatabase, User, Product } from '../../../../lib/db';
+import { getAuthenticatedUser } from '../../../../lib/auth';
 
 // GET SECURE STREAM - Redirects to high-bandwidth file links if verified
 export async function GET(req, { params }) {
