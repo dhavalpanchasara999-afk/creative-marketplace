@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { connectToDatabase, User } from '@/lib/db';
-import { hashPassword, comparePassword, signToken, getAuthenticatedUser } from '@/lib/auth';
+import { connectToDatabase, User } from '..\..\..\lib/db';
+import { hashPassword, comparePassword, signToken, getAuthenticatedUser } from '..\..\..\lib/auth';
 
 // 1. GET PROFILE ROUTE - Resolves current user details
 export async function GET(req) {
