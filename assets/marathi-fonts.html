@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>300+ Premium Marathi Fonts & Converter Tool | DigiVault</title>
+    <meta name="description" content="Get 300+ premium Marathi calligraphy, bold display, and modern sans-serif fonts plus a free offline converter tool for ₹99. Instant delivery.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Special overrides and additions for the Marathi landing page maintaining DigiVault colors */
+        body {
+            background-color: var(--bg-darker);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+        
+        .marathi-hero {
+            padding: 80px 0 60px 0;
+            background: radial-gradient(circle at top, rgba(124, 58, 237, 0.1) 0%, rgba(6, 7, 10, 0) 60%);
+        }
+
+        .highlight-accent {
+            background: var(--grad-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+
+        .badge-limited {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            color: var(--accent-red);
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 18px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .bonus-highlight-box {
+            background: rgba(124, 58, 237, 0.05);
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            padding: 16px 20px;
+            border-radius: 12px;
+            max-width: 600px;
+            margin: 24px auto 0 auto;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .bonus-icon {
+            font-size: 2.2rem;
+            background: var(--grad-glow);
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .bonus-text h4 {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--text-white);
+            margin-bottom: 3px;
+        }
+
+        .bonus-text p {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .section-compact {
+            padding: 40px 0;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .showcase-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .font-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: left;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .font-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--border-hover);
+            background: var(--bg-card-hover);
+        }
+
+        .font-preview-img {
+            width: 100%;
+            height: 90px;
+            background: var(--bg-darker);
+            border-radius: 6px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Outfit', sans-serif;
+            color: var(--text-muted);
+            border: 1px dashed rgba(255,255,255,0.04);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .checkout-box {
+            background: var(--bg-card);
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 500px;
+            margin: 40px auto 0 auto;
+            text-align: left;
+            position: relative;
+            box-shadow: 0 10px 30px -10px rgba(124, 58, 237, 0.15);
+        }
+
+        .faq-compact-container {
+            max-width: 650px;
+            margin: 30px auto 0 auto;
+            text-align: left;
+        }
+
+        .faq-compact-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 12px;
+            padding: 16px 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .faq-compact-item:hover {
+            border-color: var(--border-hover);
+        }
+
+        .faq-compact-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+            color: var(--text-white);
+            font-size: 0.95rem;
+        }
+
+        .faq-compact-answer {
+            margin-top: 10px;
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            display: none;
+        }
+
+        .faq-compact-item.active .faq-compact-answer {
+            display: block;
+        }
+
+        /* Standard CSS Toast styling matching script.js toast notifications */
+        .toast-notification {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-hover);
+            color: var(--text-white);
+            padding: 14px 20px;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            font-size: 0.9rem;
+            font-weight: 500;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .hero-grid {
+                grid-template-columns: 1fr !important;
+                text-align: center !important;
+                gap: 30px !important;
+            }
+            .hero-grid img {
+                max-width: 250px !important;
+            }
+        }
+    
+        /* Testimonials Reviews styling */
+        .reviews-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .review-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: left;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .review-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--border-hover);
+            background: var(--bg-card-hover);
+        }
+
+        .review-rating {
+            color: #fbbf24;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+        }
+
+        .review-text {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 14px;
+            flex-grow: 1;
+        }
+
+        .review-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 10px;
+        }
+
+        .review-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--grad-primary);
+            color: var(--text-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.85rem;
+        }
+
+        .review-details h5 {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--text-white);
+            margin: 0;
+        }
+
+        .review-details span {
+            font-size: 0.72rem;
+            color: var(--text-dim);
+        }
+</style>
+</head>
+<body>
+
+    <!-- Sticky Announcement Bar with persistent 30-Minute Urgency Timer -->
+    <div class="announcement-bar" id="stickyTimerBar" style="background: var(--accent-red); text-align: center; padding: 10px; font-weight: 700; font-size: 0.88rem; z-index: 1001; position: sticky; top: 0; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2);">
+        <div class="container" style="display:flex; align-items:center; justify-content:center; gap:8px;">
+            <span>⚡ विशेष सवलत ऑफर: फक्त ३० मिनिटांसाठी ₹९९! शिल्लक वेळ:</span>
+            <span id="countdownTimerText" style="background: rgba(0,0,0,0.3); padding: 2px 8px; border-radius: 4px; font-family: monospace; font-size: 0.95rem; border: 1px solid rgba(255,255,255,0.2);">29:59</span>
+        </div>
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="navbar">
+        <div class="container navbar-container">
+            <a href="index.html" class="logo-link">
+                <div class="logo-container" style="display:flex; align-items:center;">
+                    <img alt="DigiVault Logo" class="brand-logo-img" style="height: 52px; width: auto; object-fit: contain;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdERfxvscrw9MZOLZxbaEZTBme3y0v-I795Oblk90GRbwajZKrVuCwIznmDf2PScUjdQf54FUcgFRiJc-_qGqXiEMCu3y2Zy05GrcGiXDcCuq-5Xla9PVAULpPtNxJcXQrGJlCaCe1IDQ1Fd699SDs8HtIWqmeO2BjbZDw4cgA0-ohG8aF5Y1Z8e-Qn2Y9h9cKsrdq9YXovNk1tGSID5fV4oqkgX245hdh2AegWCzuO2oaVUUXOrdp_wULt7lkwOrjBTxbP5Awf1sb" onerror="this.style.display='none'; if(this.nextElementSibling) this.nextElementSibling.style.display='inline-block';"/>
+                    <span class="logo-text-fallback" style="display:none; font-size:1.5rem; font-weight:900; letter-spacing:1px; background:var(--grad-primary); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-shadow: 0 0 15px rgba(139,92,246,0.3);">DIGIVAULT</span>
+                </div>
+            </a>
+            <div class="nav-actions">
+                <a href="index.html" class="btn-nav-primary" style="background:var(--grad-glow); border:1px solid var(--border-hover); padding: 8px 16px; font-size: 0.85rem; border-radius: 6px; text-decoration: none; color: var(--text-white); font-weight:600; display: inline-flex; align-items:center; gap:6px;">
+                    <i data-lucide="arrow-left" style="width:14px;"></i> DigiVault Catalog
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 1. HERO SECTION -->
+    <section class="marathi-hero">
+        <div class="container">
+            <div class="hero-grid" style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 40px; align-items: center; text-align: left; max-width: 1100px; margin: 0 auto;">
+                <div>
+                    <div class="badge-limited">⏱️ लिमिटेड ऑफर - फक्त आजच्यासाठी</div>
+                    <h1 style="font-size: 2.8rem; font-weight: 900; line-height: 1.6; margin-bottom: 16px; color: var(--text-white);">
+                        तुमचा डिझायनिंगचा वेळ वाचवा!<br>मिळवा <span class="highlight-accent">३००+ प्रीमियम मराठी फॉन्ट्स</span>
+                    </h1>
+                    <p style="font-size: 1.1rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 24px;">
+                        लग्नपत्रिका, राजकीय बॅनर्स आणि सोशल मीडिया पोस्ट्ससाठी लागणारे सर्व डिझाईन फॉन्ट्स एकाच ठिकाणी. अक्षरे न तुटता वापरा आणि प्रत्येक डिझाईन प्रोफेशनल बनवा!
+                    </p>
+                    
+                    <a href="#checkoutBlock" class="btn-nav-primary" style="background: var(--grad-primary); color:var(--text-white); border:none; padding: 14px 32px; font-size: 1.05rem; font-weight: 800; border-radius: 8px; box-shadow: 0 0 20px rgba(124,58,237,0.3); text-decoration:none; display:inline-block; transition:all 0.2s ease;">
+                        👉 फक्त 99/- रुपये
+                    </a>
+                </div>
+                
+                <!-- Stunning 3D Box Mockup Column -->
+                <div style="position: relative; display: flex; justify-content: center; align-items: center;">
+                    <!-- Ambient Glow backdrop -->
+                    <div style="position: absolute; width: 280px; height: 280px; background: radial-gradient(circle, rgba(124, 58, 237, 0.2) 0%, rgba(0,0,0,0) 70%); z-index: 1;"></div>
+                    <img src="assets/marathi_fonts_bundle_box.png" alt="Marathi Fonts & Converter 3D Bundle Box Mockup" style="max-width: 100%; height: auto; border-radius: 12px; z-index: 2; transform: perspective(800px) rotateY(-8deg) rotateX(4deg); filter: drop-shadow(0 15px 25px rgba(0,0,0,0.5)); transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);" onmouseover="this.style.transform='perspective(800px) rotateY(-2deg) rotateX(1deg) scale(1.03)'; this.style.filter='drop-shadow(0 25px 35px rgba(124,58,237,0.25))';" onmouseout="this.style.transform='perspective(800px) rotateY(-8deg) rotateX(4deg)'; this.style.filter='drop-shadow(0 15px 25px rgba(0,0,0,0.5))';">
+                </div>
+            </div>
+            
+            <!-- The Ultimate complimentary Bonus Box -->
+            <div class="bonus-highlight-box" style="margin-top: 48px;">
+                <div class="bonus-icon">🎁</div>
+                <div class="bonus-text">
+                    <h4>complimentary Bonus: Premium Offline Font Converter Tool (किंमत ₹१,०००/- अगदी मोफत!)</h4>
+                    <p>फोटोशॉप किंवा कोरेलड्रॉ मध्ये मराठी टायपिंग करताना अक्षरे जोडण्याची डोकेदुखी कायमची संपवा. युनिकोड मराठी पेस्ट करा आणि १-क्लिक मध्ये कन्व्हर्ट करा. १००% ऑफलाइन!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. COMPACT SHOWCASE SECTION -->
+    <section class="section-compact">
+        <div class="container" style="text-align: center;">
+            <h2 style="font-size: 2rem; font-weight: 800; color: var(--text-white);">फॉन्ट्स पॅक मध्ये काय समाविष्ट आहे?</h2>
+            <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 6px;">प्रत्येक डिझाईन प्रोजेक्टसाठी डिझाईन केलेले तीन मुख्य फॉन्ट स्टाईल्स</p>
+            
+            <div class="showcase-grid">
+                <!-- Card 1 -->
+                <div class="font-card">
+                    <div class="font-preview-img" style="color: #60a5fa; font-size: 1.1rem;">हार्दिक शुभेच्छा !</div>
+                    <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--text-white); margin-bottom: 6px;">१. कॅलिग्राफी फॉन्ट्स (Calligraphy Fonts)</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;">राजकीय बॅनर्स, मोठे वाढदिवस पोस्टर्स आणि लग्नपत्रिकांसाठी अत्यंत लोकप्रिय असलेले आकर्षक आणि वळणदार कॅलिग्राफी डिझाईन्स.</p>
+                </div>
+                <!-- Card 2 -->
+                <div class="font-card">
+                    <div class="font-preview-img" style="color: #c084fc; font-size: 1rem;">नवीन उद्योग • २०२६</div>
+                    <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--text-white); margin-bottom: 6px;">२. मॉडर्न सोशल मीडिया फॉन्ट्स (Modern Sans)</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;">इन्स्टाग्राम ग्रिड्स, फेसबुक पोस्ट्स, युट्युब थंबनेल्स आणि व्यावसायिक जाहिरातींसाठी लागणारे अत्यंत आकर्षक व वाचायला सोपे आधुनिक फॉन्ट्स.</p>
+                </div>
+                <!-- Card 3 -->
+                <div class="font-card">
+                    <div class="font-preview-img" style="color: #34d399; font-weight: 900; font-size: 1.25rem;">शिवजयंती उत्सव</div>
+                    <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--text-white); margin-bottom: 6px;">३. डिस्प्ले बॅनर्स फॉन्ट्स (Bold Display)</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;">मोठमोठ्या फ्लेक्स बोर्ड्स, होर्डिंग्स आणि ठळक जाहिरात शीर्षकांसाठी खास डिझाईन केलेले वजनदार आणि लक्ष वेधून घेणारे फॉन्ट्स.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. COMPLIMENTARY BONUS SPECIFICATION -->
+    <section class="section-compact" style="background: rgba(255,255,255,0.01);">
+        <div class="container" style="max-width: 800px; text-align: center;">
+            <div style="font-size: 0.75rem; color: var(--accent-purple); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">COMPLIMENTARY WORTH ₹1,000/-</div>
+            <h2 style="font-size: 2rem; font-weight: 900; color: var(--text-white);">Offline Marathi Devanagari Font Converter Tool</h2>
+            <p style="color: var(--text-muted); line-height: 1.5; margin: 12px 0 24px 0; font-size: 0.95rem;">
+                फोटोशॉप, कोरेलड्रॉ किंवा इलस्ट्रेटर मध्ये युनिकोड मराठी मजकूर टाईप केल्यावर अक्षरे चुकण्याची किंवा मोडण्याची जुनी डोकेदुखी विसरा. या ऑफलाइन कन्व्हर्टर मध्ये <strong>युनिकोड पेस्ट करा, १-क्लिक मध्ये कन्व्हर्ट करा</strong> आणि थेट डिझायनिंग सॉफ्टवेअर मध्ये वापरा!
+            </p>
+            
+            <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; display:flex; flex-direction:column; gap:12px; text-align: left;">
+                <div style="display:flex; align-items:center; gap:8px; font-size:0.88rem; font-weight: 700; color: var(--text-white);">
+                    <i data-lucide="check-circle" style="width:16px; color:#34d399;"></i> १००% ऑफलाइन - इंटरनेटशिवाय चालू शकते.
+                </div>
+                <div style="display:flex; align-items:center; gap:8px; font-size:0.88rem; font-weight: 700; color: var(--text-white);">
+                    <i data-lucide="check-circle" style="width:16px; color:#34d399;"></i> जाहिरातमुक्त, अत्यंत सोपे आणि १-क्लिक मध्ये जलद रूपांतर.
+                </div>
+                <div style="display:flex; align-items:center; gap:8px; font-size:0.88rem; font-weight: 700; color: var(--text-white);">
+                    <i data-lucide="check-circle" style="width:16px; color:#34d399;"></i> सर्व लोकप्रिय फॉन्ट सिस्टीम्स (ShreeLipi, KrutiDev, AMS) साठी सपोर्टेड.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+    <!-- 3.5. CUSTOMER REVIEWS SECTION -->
+    <section class="section-compact" style="background: rgba(255,255,255,0.015);">
+        <div class="container" style="text-align: center;">
+            <h2 style="font-size: 2rem; font-weight: 800; color: var(--text-white);">💬 डिझायनर्सचे प्रामाणिक अनुभव (Designers Reviews)</h2>
+            <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 6px; margin-bottom: 30px;">हा फॉन्ट पॅक वापरणाऱ्या महाराष्ट्रातील डिझायनर्सचे चांगले आणि वाईट अनुभव</p>
+            
+            <div class="reviews-grid">
+                <!-- Review 1 (5 Stars) -->
+                <div class="review-card">
+                    <div>
+                        <div class="review-rating">★★★★★</div>
+                        <p class="review-text">"भावांनो एकदम कडक फॉन्ट्स आहेत. मी माझ्या फ्लेक्स प्रिंटिंग शॉप साठी घेतले. वाढदिवसाच्या बॅनर साठी खूप कामात आले. आणि जो ऑफलाइन कन्व्हर्टर दिलाय तो तर वरदान आहे. १ क्लिक मध्ये काम होते."</p>
+                    </div>
+                    <div class="review-user">
+                        <div class="review-avatar">वि</div>
+                        <div class="review-details">
+                            <h5>विलास साळुंखे</h5>
+                            <span>Flex Designer, Satara</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Review 2 (4 Stars) -->
+                <div class="review-card">
+                    <div>
+                        <div class="review-rating">★★★★☆</div>
+                        <p class="review-text">"Fonts design layout khup bhari ahe bhau. Pn ams converter madhe thoda issue yet hota starting la support email kela 1 hr madhe reply ala. Aata smooth chalu ahe. 99 rs madhe deal mast ahe."</p>
+                    </div>
+                    <div class="review-user">
+                        <div class="review-avatar">स</div>
+                        <div class="review-details">
+                            <h5>सचीन गावडे</h5>
+                            <span>Freelance Banner Maker, Pune</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 3 (3 Stars) -->
+                <div class="review-card">
+                    <div>
+                        <div class="review-rating">★★★☆☆</div>
+                        <p class="review-text">"फॉन्ट्स खुप चांगले आहेत पण काही फॉन्ट्सचे नावे श्रीलिपी सारखे असल्यामुळे समजायला वेळ लागतो. आणि मोबाईल मध्ये कन्व्हर्टर चालत नाही, फक्त लॅपटॉप वर चालतो हे पहिले सांगायला हवे होते. डिझाईन साठी फॉन्ट चे कलेक्शन छान आहे."</p>
+                    </div>
+                    <div class="review-user">
+                        <div class="review-avatar">ज्ञा</div>
+                        <div class="review-details">
+                            <h5>ज्ञानेश्वर शिंदे</h5>
+                            <span>Graphic Artist, Kolhapur</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 4 (4 Stars) -->
+                <div class="review-card">
+                    <div>
+                        <div class="review-rating">★★★★☆</div>
+                        <p class="review-text">"Over all good collection. Fonts direct photoshop me support karte hai. Ek star kam de raha hu kyuki ZIP file download hone me thoda time laga network slow tha. baki fonts quality solid ahe."</p>
+                    </div>
+                    <div class="review-user">
+                        <div class="review-avatar">अ</div>
+                        <div class="review-details">
+                            <h5>अनिकेट कदम</h5>
+                            <span>Social Media Editor, Mumbai</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 5 (3 Stars) -->
+                <div class="review-card">
+                    <div>
+                        <div class="review-rating">★★★☆☆</div>
+                        <p class="review-text">"३००+ फॉन्ट मधले जवळजवळ ५०-६० फॉन्ट सारखेच दिसतात, थोडे वेगळे असायला पाहिजे होते. पण ९९ रुपयांत यापेक्षा जास्त काय मिळणार. सुलेखन फॉन्ट्स खुप भारी आहेत, कामाचे आहेत."</p>
+                    </div>
+                    <div class="review-user">
+                        <div class="review-avatar">म</div>
+                        <div class="review-details">
+                            <h5>मनोज थोरात</h5>
+                            <span>UI Designer & Print Specialist, Nashik</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+<!-- 4. SECURE CHECKOUT GATEWAY BLOCK -->
+    <section class="section-compact" id="checkoutBlock">
+        <div class="container" style="text-align: center;">
+            <h2 style="font-size: 2rem; font-weight: 800; color: var(--text-white);">💳 झटपट पेमेंट आणि डाऊनलोड</h2>
+            <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 6px;">पेमेंट पूर्ण झाल्यावर फॉन्ट्स आणि टूल एका सेकंदात तुमच्या ई-मेलवर आणि लॉकरमध्ये मिळतील.</p>
+            
+            <div class="checkout-box">
+                <div style="font-size:0.95rem; font-weight:800; color:var(--text-white); border-bottom:1px solid var(--border-color); padding-bottom:10px; margin-bottom:16px; letter-spacing:0.5px; display:flex; justify-content:space-between;">
+                    <span>📋 बिलिंग तपशील (Billing Details)</span>
+                    <span style="color: var(--accent-purple); font-weight:800;">₹९९/- फक्त</span>
+                </div>
+                
+                <form id="marathiFontsCheckoutForm" onsubmit="handleCheckoutSubmit(event)">
+                    <!-- Name Fields -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                        <div>
+                            <label style="font-size: 0.75rem; color: var(--text-muted); display: block; margin-bottom: 4px;">पहिले नाव (First Name)</label>
+                            <input type="text" id="checkoutFirstName" placeholder="उदा. राहुल" required style="width: 100%; background: var(--bg-darker); border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 4px; color: var(--text-white); font-family:inherit;">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.75rem; color: var(--text-muted); display: block; margin-bottom: 4px;">आडनाव (Last Name)</label>
+                            <input type="text" id="checkoutLastName" placeholder="उदा. पाटील" required style="width: 100%; background: var(--bg-darker); border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 4px; color: var(--text-white); font-family:inherit;">
+                        </div>
+                    </div>
+                    
+                    <!-- Email field -->
+                    <div style="margin-bottom: 12px;">
+                        <label style="font-size: 0.75rem; color: var(--text-muted); display: block; margin-bottom: 4px;">ई-मेल आयडी (For Instant Delivery)</label>
+                        <input type="email" id="checkoutEmail" placeholder="yourname@gmail.com" required style="width: 100%; background: var(--bg-darker); border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 4px; color: var(--text-white); font-family:inherit;">
+                    </div>
+                    
+                    <!-- Phone field -->
+                    <div style="margin-bottom: 12px;">
+                        <label style="font-size: 0.75rem; color: var(--text-muted); display: block; margin-bottom: 4px;">मोबाईल नंबर (WhatsApp Number)</label>
+                        <input type="text" id="checkoutPhone" placeholder="उदा. 9876543210" required style="width: 100%; background: var(--bg-darker); border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 4px; color: var(--text-white); font-family:inherit;">
+                    </div>
+
+                    <!-- Password field for locker creation -->
+                    <div style="margin-bottom: 18px;">
+                        <label style="font-size: 0.75rem; color: var(--text-muted); display: block; margin-bottom: 4px;">लॉकर पासवर्ड सेट करा (Create Locker Password)</label>
+                        <input type="password" id="checkoutPassword" placeholder="••••••••" required style="width: 100%; background: var(--bg-darker); border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 4px; color: var(--text-white); font-family:inherit;">
+                        <span style="font-size:0.68rem; color:var(--text-dim); margin-top:3px; display:block;">या पासवर्डद्वारे तुम्ही भविष्यात कधीही तुमचे खरेदी केलेले फॉन्ट्स पुन्हा डाऊनलोड करू शकाल.</span>
+                    </div>
+
+                    <!-- Value pricing strip -->
+                    <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 8px; border: 1px dashed var(--border-color); margin-bottom: 18px; font-size: 0.85rem; line-height: 1.4;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                            <span style="color:var(--text-muted);">३००+ मराठी फॉन्ट्स पॅक:</span>
+                            <span style="text-decoration: line-through; color: var(--text-dim);">₹१,९९९</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                            <span style="color:var(--text-muted);">ऑफलाइन कन्व्हर्टर टूल (बोनस):</span>
+                            <span style="color: #34d399; font-weight:700;">मोफत (₹१,००० मूल्य)</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; font-weight: 800; font-size: 0.95rem; border-top: 1px solid var(--border-color); padding-top: 6px; margin-top: 4px;">
+                            <span style="color:var(--text-white);">आजची किंमत (Today's Price):</span>
+                            <span style="color: #3b82f6;">₹९९ फक्त</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Submit CTA button -->
+                    <button type="submit" class="btn-nav-primary" style="width:100%; background: var(--grad-primary); border:none; padding:12px; font-size: 1rem; font-weight:800; border-radius: 6px; color:#fff; display:flex; align-items:center; justify-content:center; gap:8px; cursor:pointer;">
+                        <i data-lucide="shield-check" style="width:18px;"></i> फक्त 99/- रुपये
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. COMPACT FAQ SECTION -->
+    <section class="section-compact" style="background: rgba(255,255,255,0.015);">
+        <div class="container" style="text-align: center;">
+            <h2 style="font-size: 2rem; font-weight: 800; color: var(--text-white);">सतत विचारले जाणारे प्रश्न (FAQs)</h2>
+            
+            <div class="faq-compact-container">
+                <!-- FAQ 1 -->
+                <div class="faq-compact-item" onclick="toggleFaq(this)">
+                    <div class="faq-compact-question">
+                        <span>१. पेमेंट केल्यावर मला फॉन्ट्स कसे मिळतील?</span>
+                        <i data-lucide="chevron-down" style="width:16px; transition:transform 0.2s;"></i>
+                    </div>
+                    <div class="faq-compact-answer">
+                        पेमेंट पूर्ण होताच एका सेकंदात तुम्हाला ईमेल द्वारे गुगल ड्राईव्ह डाऊनलोड लिंक पाठवली जाईल. तसेच, तुम्ही या पेजवर सेट केलेल्या पासवर्डद्वारे थेट तुमच्या 'DigiVault Locker' डॅशबोर्डवर जाऊन कधीही फाइल्स डाऊनलोड करू शकता.
+                    </div>
+                </div>
+                <!-- FAQ 2 -->
+                <div class="faq-compact-item" onclick="toggleFaq(this)">
+                    <div class="faq-compact-question">
+                        <span>२. कन्व्हर्टर टूल वापरण्यासाठी इंटरनेट आवश्यक आहे का?</span>
+                        <i data-lucide="chevron-down" style="width:16px; transition:transform 0.2s;"></i>
+                    </div>
+                    <div class="faq-compact-answer">
+                        नाही. हे १००% ऑफलाइन टूल आहे. आम्ही दिलेली फाईल तुम्ही तुमच्या कॉम्प्युटरवर सेव्ह करून ठेवू शकता आणि इंटरनेट नसतानाही कधीही थेट ब्राउझरमध्ये उघडून वापरू शकता.
+                    </div>
+                </div>
+                <!-- FAQ 3 -->
+                <div class="faq-compact-item" onclick="toggleFaq(this)">
+                    <div class="faq-compact-question">
+                        <span>३. हे फॉन्ट्स सर्व डिझायनिंग सॉफ्टवेअरमध्ये चालतील का?</span>
+                        <i data-lucide="chevron-down" style="width:16px; transition:transform 0.2s;"></i>
+                    </div>
+                    <div class="faq-compact-answer">
+                        होय! सर्व फॉन्ट्स हे स्टँडर्ड TTF/OTF फॉरमॅटमध्ये आहेत, जे Adobe Photoshop, Adobe Illustrator, CorelDraw, Canva, Laptops, Windows आणि MacOS मधील सर्व प्रमुख डिझायनिंग टूल्समध्ये पूर्णपणे सपोर्टेड आहेत.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer" style="padding:40px 0; border-top:1px solid var(--border-color); background: var(--bg-darker); text-align:center;">
+        <div class="container">
+            <p style="font-size:0.85rem; color:var(--text-dim);">&copy; २०२६ DigiVault. सर्व हक्क सुरक्षित. | <a href="index.html" style="color:var(--text-muted); text-decoration:none;">मुख्य वेबसाईट</a></p>
+            <p style="font-size:0.65rem; color:var(--text-dim); margin-top:8px; max-width:600px; margin-left:auto; margin-right:auto; line-height:1.4;">Disclaimer: In no way are we associated with Facebook or Google. Your payment details are processed under highly secure 256-bit SSL encrypted protocols. Contact us at support@digivault.in for download issues.</p>
+        </div>
+    </footer>
+
+    <!-- RAZORPAY PAYMENT SDK -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <!-- INTERACTIVE JAVASCRIPT LOGIC -->
+    <script>
+        // --- RAZORPAY CONFIGURATION ---
+        // Set to your real Razorpay Key ID (starts with 'rzp_test_' or 'rzp_live_') to activate real payments!
+        // If kept as 'rzp_test_YOUR_KEY_HERE', the checkout will run in simulated/testing mockup mode automatically.
+        const RAZORPAY_KEY_ID = 'rzp_test_YOUR_KEY_HERE';
+
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // 1. DYNAMIC SESSION-PERSISTENT 30-MINUTE TIMER
+        function startUrgencyTimer() {
+            const timerKey = 'marathi_fonts_timer_deadline';
+            let deadline = localStorage.getItem(timerKey);
+            
+            // Set new 30 minute deadline if not exists or if expired
+            const now = new Date().getTime();
+            if (!deadline || now > parseInt(deadline)) {
+                const thirtyMinutesLater = now + (30 * 60 * 1000);
+                localStorage.setItem(timerKey, thirtyMinutesLater.toString());
+                deadline = thirtyMinutesLater.toString();
+            }
+            
+            const timerInterval = setInterval(() => {
+                const currentTime = new Date().getTime();
+                const remaining = parseInt(deadline) - currentTime;
+                
+                if (remaining <= 0) {
+                    // Loop timer back to 30 min quietly to maintain urgency without breaking layout
+                    const nextDeadline = new Date().getTime() + (30 * 60 * 1000);
+                    localStorage.setItem(timerKey, nextDeadline.toString());
+                    deadline = nextDeadline.toString();
+                    return;
+                }
+                
+                const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+                
+                const displayMin = minutes < 10 ? '0' + minutes : minutes;
+                const displaySec = seconds < 10 ? '0' + seconds : seconds;
+                
+                document.getElementById('countdownTimerText').textContent = `${displayMin}:${displaySec}`;
+            }, 1000);
+        }
+        
+        startUrgencyTimer();
+
+        // 2. TOGGLE ACCORDION FAQS
+        function toggleFaq(item) {
+            const isActive = item.classList.contains('active');
+            
+            // Close all others
+            document.querySelectorAll('.faq-compact-item').forEach(el => {
+                el.classList.remove('active');
+                const icon = el.querySelector('[data-lucide="chevron-up"]');
+                if (icon) {
+                    icon.setAttribute('data-lucide', 'chevron-down');
+                }
+            });
+            
+            if (!isActive) {
+                item.classList.add('active');
+            }
+            
+            lucide.createIcons();
+        }
+
+        // 3. TOAST NOTIFICATION UTILITY
+        function showCustomToast(title, message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = 'toast-notification';
+            toast.style.borderColor = type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6';
+            
+            const iconName = type === 'success' ? 'check-circle' : type === 'error' ? 'alert-triangle' : 'info';
+            
+            toast.innerHTML = `
+                <i data-lucide="${iconName}" style="width:20px; height:20px; color:${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};"></i>
+                <div style="text-align:left;">
+                    <div style="font-weight:700; color:var(--text-white); font-size:0.85rem; margin-bottom:2px;">${title}</div>
+                    <div style="font-size:0.75rem; color:var(--text-muted); line-height:1.3;">${message}</div>
+                </div>
+            `;
+            
+            document.body.appendChild(toast);
+            lucide.createIcons();
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s forwards';
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        // Add slideOut keyframes
+        const styleSheet = document.createElement('style');
+        styleSheet.innerText = `
+            @keyframes slideOut {
+                to { transform: translateY(100px); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(styleSheet);
+
+        // 4. SECURE CHECKOUT TRIGGER (SIMULATED OR REAL RAZORPAY)
+        function handleCheckoutSubmit(e) {
+            e.preventDefault();
+            
+            const firstName = document.getElementById('checkoutFirstName').value.trim();
+            const lastName = document.getElementById('checkoutLastName').value.trim();
+            const email = document.getElementById('checkoutEmail').value.trim();
+            const phone = document.getElementById('checkoutPhone').value.trim();
+            const password = document.getElementById('checkoutPassword').value.trim();
+            
+            if (!firstName || !lastName || !email || !phone || !password) {
+                showCustomToast("Form Error", "Please fill in all the billing fields.", "error");
+                return;
+            }
+
+            // Sync with local databases
+            const dbUsers = JSON.parse(localStorage.getItem('users') || '[]');
+            const dbOrders = JSON.parse(localStorage.getItem('orders') || '[]');
+
+            // Auto-signup/login simulation
+            let currentUser = dbUsers.find(u => u.email.toLowerCase() === email.toLowerCase());
+            if (!currentUser) {
+                currentUser = {
+                    name: firstName + ' ' + lastName,
+                    email: email,
+                    password: password,
+                    phone: phone,
+                    role: 'user'
+                };
+                dbUsers.push(currentUser);
+                localStorage.setItem('users', JSON.stringify(dbUsers));
+                showCustomToast("Account Created", "Success! Your dashboard locker has been initialized.", "success");
+            } else {
+                currentUser.phone = phone;
+                localStorage.setItem('users', JSON.stringify(dbUsers));
+                showCustomToast("Welcome Back", "Existing email detected! Logged you in automatically.", "info");
+            }
+
+            localStorage.setItem('active_user', JSON.stringify(currentUser));
+
+            const saveSimulatedOrder = (paymentId) => {
+                const orderId = 'DV-' + Math.floor(100000 + Math.random() * 900000);
+                
+                const newOrder = {
+                    orderId: orderId,
+                    userEmail: currentUser.email,
+                    products: [
+                        { 
+                            id: 'marathi_fonts_pack', 
+                            title: '300+ Premium Marathi Fonts & Offline Converter Tool', 
+                            downloadUrl: 'https://drive.google.com/uc?export=download&id=fonts_vault_zip_mock'
+                        }
+                    ],
+                    totalPaid: 99,
+                    gateway: paymentId.startsWith('pay_mock') ? 'Simulated API' : 'Razorpay API',
+                    date: new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' }),
+                    status: 'Paid',
+                    paymentId: paymentId
+                };
+
+                dbOrders.push(newOrder);
+                localStorage.setItem('orders', JSON.stringify(dbOrders));
+
+                console.log(`[EMAIL DISPATCH] 300+ Marathi Fonts & Offline Converter delivered to ${currentUser.email} for order ${orderId}.`);
+                
+                // Show payment success
+                showCustomToast("Razorpay Payment Success", `Dhanyavad, ${firstName}! Payment successful! Your 300+ Marathi Fonts Pack & Converter Tool are now unlocked inside your Digital Locker!`, "success");
+                
+                // Redirect directly to user-dashboard in main app
+                setTimeout(() => {
+                    window.location.href = 'index.html#user-dashboard';
+                }, 1000);
+            };
+
+            // Switch between simulated mode or real Razorpay checkout
+            if (RAZORPAY_KEY_ID === 'rzp_test_YOUR_KEY_HERE') {
+                // RUN SIMULATED CHECKOUT OVERLAY (For quick testing without credentials)
+                const processingOverlay = document.createElement('div');
+                processingOverlay.style.position = 'fixed';
+                processingOverlay.style.top = '0';
+                processingOverlay.style.left = '0';
+                processingOverlay.style.width = '100vw';
+                processingOverlay.style.height = '100vh';
+                processingOverlay.style.background = 'rgba(6, 7, 10, 0.96)';
+                processingOverlay.style.display = 'flex';
+                processingOverlay.style.flexDirection = 'column';
+                processingOverlay.style.alignItems = 'center';
+                processingOverlay.style.justifyContent = 'center';
+                processingOverlay.style.zIndex = '999999';
+                processingOverlay.style.color = '#fff';
+                processingOverlay.style.fontFamily = 'Outfit, sans-serif';
+                processingOverlay.style.textAlign = 'center';
+                
+                processingOverlay.innerHTML = `
+                    <div style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 36px; border-radius: 16px; max-width: 400px; width: 90%; box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
+                        <div style="font-size:2.2rem; font-weight:900; color:#3b82f6; margin-bottom:12px; letter-spacing:0.5px;">Razorpay</div>
+                        <div style="border: 3px solid transparent; border-top-color: #3b82f6; border-radius: 50%; width: 44px; height: 44px; margin: 24px auto; animation: spin 1s linear infinite;"></div>
+                        <h4 style="font-size: 1.1rem; margin-bottom: 8px; font-weight: 800;">Processing Razorpay Transaction</h4>
+                        <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;">Connecting to mobile banking server... Please do not hit back button or close this tab.</p>
+                        <div style="font-size: 0.8rem; color: #3b82f6; font-weight: 700; background: rgba(59,130,246,0.1); padding: 6px 14px; border-radius: 100px; display: inline-block; border: 1px solid rgba(59,130,246,0.15);">Simulated Sandbox Mode Active</div>
+                    </div>
+                    <style>
+                        @keyframes spin {
+                            to { transform: rotate(360deg); }
+                        }
+                    </style>
+`;
+                
+                document.body.appendChild(processingOverlay);
+
+                setTimeout(() => {
+                    document.body.removeChild(processingOverlay);
+                    saveSimulatedOrder('pay_mock_' + Math.random().toString(36).substring(2, 10));
+                }, 2500);
+            } else {
+                // LAUNCH REAL LIVE RAZORPAY STANDARD WEB PAYMENT POPUP!
+                const options = {
+                    "key": RAZORPAY_KEY_ID,
+                    "amount": 9900, // ₹99 = 9900 Paise (subunit)
+                    "currency": "INR",
+                    "name": "DigiVault Premium",
+                    "description": "300+ Premium Marathi Fonts Pack & Converter Tool",
+                    "theme": {
+                        "color": "#7c3aed" // Theme purple accent
+                    },
+                    "prefill": {
+                        "name": firstName + " " + lastName,
+                        "email": email,
+                        "contact": phone
+                    },
+                    "handler": function (response) {
+                        saveSimulatedOrder(response.razorpay_payment_id);
+                    },
+                    "modal": {
+                        "ondismiss": function() {
+                            showCustomToast("Payment Cancelled", "The Razorpay payment popup was closed before completing checkout.", "error");
+                        }
+                    }
+                };
+                
+                try {
+                    const rzp = new Razorpay(options);
+                    rzp.open();
+                } catch(err) {
+                    showCustomToast("Integration Error", "Failed to load Razorpay window. Please check your Key ID.", "error");
+                }
+            }
+        }
+    </script>
+</body>
+</html>
