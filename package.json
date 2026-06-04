@@ -13,14 +13,13 @@
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.300.0",
     "mongoose": "^8.0.3",
-    "next": "14.0.4",
+    "next": "14.2.20",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "sharp": "^0.33.1",
     "stripe": "^14.10.0"
   },
   "devDependencies": {
     "eslint": "^8.56.0",
-    "eslint-config-next": "14.0.4"
+    "eslint-config-next": "14.2.20"
   }
 }
