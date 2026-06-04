@@ -2,6 +2,8 @@
 import { connectToDatabase, User } from '../../../lib/db';
 import { hashPassword, comparePassword, signToken, getAuthenticatedUser } from '../../../lib/auth';
 
+export const dynamic = 'force-dynamic';
+
 // 1. GET PROFILE ROUTE - Resolves current user details
 export async function GET(req) {
     try {

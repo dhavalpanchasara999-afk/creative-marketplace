@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { connectToDatabase, Product, Order, User } from '../../../lib/db';
 import { getAuthenticatedUser } from '../../../lib/auth';
 
+export const dynamic = 'force-dynamic';
+
 // POST PAYMENT SUBMISSION - Logs verified checkout purchases
 export async function POST(req) {
     try {

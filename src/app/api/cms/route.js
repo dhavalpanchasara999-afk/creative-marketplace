@@ -1,6 +1,8 @@
-﻿import { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { connectToDatabase, CMSConfig } from '../../../lib/db';
 import { getAuthenticatedUser } from '../../../lib/auth';
+
+export const dynamic = 'force-dynamic';
 
 // GET - Public endpoint to fetch CMS config
 export async function GET(req) {
@@ -10,7 +12,9 @@ export async function GET(req) {
         if (!config) {
             config = await CMSConfig.create({});
         }
-        return NextResponse.json({ success: true, config });
+        return NextResponse.json({ success: true, config }, {
+            headers: { 'Cache-Control': 'no-store, max-age=0' }
+        });
     } catch (e) {
         return NextResponse.json({ error: e.message }, { status: 500 });
     }

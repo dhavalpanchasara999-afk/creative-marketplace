@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { connectToDatabase, User, Product } from '../../../../lib/db';
 import { getAuthenticatedUser } from '../../../../lib/auth';
 
+export const dynamic = 'force-dynamic';
+
 // GET SECURE STREAM - Redirects to high-bandwidth file links if verified
 export async function GET(req, { params }) {
     try {

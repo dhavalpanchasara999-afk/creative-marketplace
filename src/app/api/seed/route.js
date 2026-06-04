@@ -2,6 +2,8 @@
 import { connectToDatabase, User, Product, CMSConfig } from '../../../lib/db';
 import { hashPassword } from '../../../lib/auth';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(req) {
     try {
         const { searchParams } = new URL(req.url);

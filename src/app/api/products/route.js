@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { connectToDatabase, Product } from '../../../lib/db';
 import { getAuthenticatedUser } from '../../../lib/auth';
 
+export const dynamic = 'force-dynamic';
+
 // 1. GET CATALOG - Fetch and filter digital products publically
 export async function GET(req) {
     try {
