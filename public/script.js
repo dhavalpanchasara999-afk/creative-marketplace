@@ -41,12 +41,15 @@ async function apiRequest(endpoint, options = {}) {
 }
 
 async function saveCmsToApi() {
+    if (_isInitializing) return;
     const result = await apiRequest('/api/cms', {
         method: 'PUT',
         body: JSON.stringify(CMS_CONFIG)
     });
     if (result && result.success) console.log('CMS saved to DB');
 }
+
+let _isInitializing = true;
 
 async function loadDataFromApi() {
     try {
@@ -2054,6 +2057,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (aboutBox) {
         aboutBox.innerHTML = '<h1>' + (CMS_CONFIG.aboutHeading || 'About DigiVault') + '</h1>' + (CMS_CONFIG.aboutContentHTML || '');
     }
+    _isInitializing = false;
+    console.log('DigiVault: Initialization complete, API saves enabled.');
+
     // Force loading animation overlay fade out
     setTimeout(() => {
         const overlay = document.getElementById('loadingOverlay');
@@ -2068,15 +2074,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Synchronize custom HSL colors inside root stylesheet
     applyCmsTheme();
     
-    // Apply visual branding to footer disclaimers
+    // Load config variables inside customize drawers FIRST
+    loadCmsValuesIntoInputs();
+
+    // Then apply visual branding from loaded config
     applyCmsBranding();
     applyCmsHero();
     applyCmsAnnouncement();
     applyCmsFooter();
     applyCmsPolicies();
-    
-    // Load config variables inside customize drawers
-    loadCmsValuesIntoInputs();
 
     // Render Home defaults
     renderHomeView();
