@@ -1,0 +1,28 @@
+// --- DIGIVAULT CMS STATIC BACKUP CONFIGURATION ---
+const DIGITAL_CMS_CONFIG = {
+    "brandName": "",
+    "brandDomain": "",
+    "supportEmail": "",
+    "logoUrl": "",
+    "logoHeight": "52px",
+    "primaryColor": "#3b82f6",
+    "secondaryColor": "#8b5cf6",
+    "announcementText": "",
+    "heroHeadline": "",
+    "heroSub": "",
+    "heroCtaLabel": "",
+    "offerTitle": "Get up to 70% OFF!",
+    "offerSub": "Last Chance! Price will increase soon. Don't miss out on premium assets at fraction of the cost.",
+    "countdownHours": 24,
+    "footerTagline": "",
+    "footerCopyright": "",
+    "contactPhone": "",
+    "contactAddress": "",
+    "contactHeading": "",
+    "contactSub": "",
+    "policyTerms": "",
+    "policyPrivacy": "",
+    "policyRefund": "",
+    "aboutHeading": "About DigiVault",
+    "aboutContentHTML": "<p>DigiVault is a premium startup-style digital products marketplace engineered for creative designers, freelance developers, and high-performance digital marketers.</p>\n<p>We believe that high-quality assets (such as customizable templates, high-definition fonts, specialized e-books, and modular vectors) should not carry astronomical, budget-breaking costs. Our core mission is to curate the absolute highest tier of digital files and bundle them at accessible prices for creators worldwide.</p>\n<h3>Our Operations</h3>\n<p>Registered legally as <strong>DigiVault Technologies</strong>, we operate out of our primary administrative offices in New Delhi:</p>\n<ul>\n    <li><strong>Registered Address:</strong> 3rd Floor, Connaught Place, New Delhi, Delhi 110001, India</li>\n    <li><strong>Support Helpline:</strong> support@digivault.in</li>\n</ul>"
+};

@@ -1,0 +1,9 @@
+﻿{
+  "framework": "nextjs",
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/marathi-fonts", "destination": "/marathi-fonts.html" },
+    { "source": "/((?!api|_next).*)", "destination": "/index.html" }
+  ]
+}
