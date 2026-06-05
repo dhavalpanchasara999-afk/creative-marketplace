@@ -64,7 +64,7 @@ export async function POST(req) {
         }
 
         const body = await req.json();
-        const { title, description, category, salePrice, originalPrice, thumbnail, downloadUrl, tags } = body;
+        const { title, description, category, salePrice, originalPrice, thumbnail, downloadUrl, tags, featured, premiumAsset } = body;
 
         if (!title || !description || !category || !salePrice || !originalPrice || !thumbnail || !downloadUrl) {
             return NextResponse.json({ error: 'Missing required digital asset parameters' }, { status: 400 });
@@ -82,7 +82,9 @@ export async function POST(req) {
             originalPrice: Number(originalPrice),
             thumbnail,
             downloadUrl,
-            tags: tagsArray || []
+            tags: tagsArray || [],
+            featured: featured === true || featured === 'true',
+            premiumAsset: premiumAsset === true || premiumAsset === 'true'
         });
 
         return NextResponse.json({ success: true, message: 'Digital product created successfully!', product: newProduct });
@@ -102,7 +104,7 @@ export async function PUT(req) {
         }
 
         const body = await req.json();
-        const { id, title, description, category, rating, salePrice, originalPrice, thumbnail, downloadUrl, tags, status } = body;
+        const { id, title, description, category, rating, salePrice, originalPrice, thumbnail, downloadUrl, tags, status, featured, premiumAsset } = body;
 
         if (!id) {
             return NextResponse.json({ error: 'Product ID is required for editing' }, { status: 400 });
@@ -122,7 +124,9 @@ export async function PUT(req) {
                 thumbnail,
                 downloadUrl,
                 tags: tagsArray,
-                status
+                status,
+                featured: featured === true || featured === 'true',
+                premiumAsset: premiumAsset === true || premiumAsset === 'true'
             },
             { new: true }
         );
