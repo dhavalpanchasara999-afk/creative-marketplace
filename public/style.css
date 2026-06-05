@@ -1,4 +1,4 @@
-/* 
+﻿/* 
 ========================================================================
    DIGIVAULT PREMIUM DIGITAL MARKETPLACE STYLESHEET
    Aesthetic: Dark Futuristic SaaS, Glowing Gradients, Glassmorphism
@@ -1861,7 +1861,7 @@ ul {
     height: 100vh;
     background: var(--bg-card);
     border-left: 1px solid var(--border-color);
-    z-index: 1500;
+    z-index: 2000;
     box-shadow: -10px 0 40px rgba(0, 0, 0, 0.7);
     transition: right 0.3s ease-in-out;
     display: flex;
