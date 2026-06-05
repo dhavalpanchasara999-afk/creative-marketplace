@@ -1,4 +1,4 @@
-﻿import mongoose from 'mongoose';
+import mongoose from 'mongoose';
 
 // 1. MONGODB CONNECTION POOLING ENGINE
 const MONGODB_URI = process.env.MONGODB_URI;
@@ -64,6 +64,7 @@ const ProductSchema = new mongoose.Schema({
     downloadUrl: { type: String, required: true },
     tags: [String],
     featured: { type: Boolean, default: false },
+    premiumAsset: { type: Boolean, default: true },
     reviews: [{
         name: String,
         text: String,
