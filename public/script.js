@@ -1,4 +1,4 @@
-﻿/*
+/*
 ========================================================================
    DIGIVAULT CENTRAL DYNAMIC OPERATIONS ENGINE (LocalStorage Full-Stack SPA)
 ========================================================================
@@ -32,7 +32,10 @@ async function apiRequest(endpoint, options = {}) {
     const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) };
     if (token) headers['Authorization'] = 'Bearer ' + token;
     try {
-        const res = await fetch(endpoint, { ...options, headers });
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 8000);
+        const res = await fetch(endpoint, { ...options, headers, signal: controller.signal });
+        clearTimeout(timeoutId);
         return await res.json();
     } catch (err) {
         console.warn('API request failed:', endpoint, err);
@@ -208,7 +211,7 @@ const INITIAL_CATEGORIES = [
     { name: "Courses", icon: "🎓", slug: "courses", status: "enabled" },
     { name: "E-books", icon: "📚", slug: "e-books", status: "enabled" },
     { name: "Templates", icon: "💻", slug: "templates", status: "enabled" },
-    { name: "Fonts", icon: "🔠", slug: "fonts", status: "enabled" },
+    { name: "Fonts", icon: "✍️", slug: "fonts", status: "enabled" },
     { name: "AI Prompts", icon: "🧠", slug: "ai-prompts", status: "enabled" },
     { name: "Graphic Assets", icon: "🎨", slug: "graphic-assets", status: "enabled" },
     { name: "Video Templates", icon: "🎬", slug: "video-templates", status: "enabled" }
@@ -222,7 +225,7 @@ const INITIAL_CMS_CONFIG = {
     logoHeight: "52px",
     primaryColor: "#3b82f6",
     secondaryColor: "#8b5cf6",
-    announcementText: "🚨 Limited Period Offer- Get up to 70% Off Premium Asset Vaults! Instant Locker Delivery 🚨",
+    announcementText: "⚡ Limited Period Offer- Get up to 70% Off Premium Asset Vaults! Instant Locker Delivery ⚡",
     heroHeadline: "Unlock Your <span class='text-gradient'>Creative Potential</span>",
     heroSub: "Access thousands of premium digital assets, courses, and templates designed to elevate your creative projects. The ultimate vault for modern creators.",
     heroCtaLabel: "Explore Our Creative Vault",
@@ -230,7 +233,7 @@ const INITIAL_CMS_CONFIG = {
     offerSub: "Last Chance! Price will increase soon. Don't miss out on premium assets at fraction of the cost.",
     countdownHours: 24,
     footerTagline: "The ultimate premium marketplace for creators, designers, and professionals.",
-    footerCopyright: "© 2026 DigiVault Premium Marketplace. All rights reserved. Built for creators.",
+    footerCopyright: "� 2026 DigiVault Premium Marketplace. All rights reserved. Built for creators.",
     
     // Extended contact configurations
     contactPhone: "+91 99999 88888",
@@ -251,11 +254,11 @@ const INITIAL_CMS_CONFIG = {
 };
 
 const FEATURE_BENEFITS = [
-    { icon: "🔓", title: "Lifetime Access", desc: "One-time payment for endless utility and assets use." },
+    { icon: "⚡", title: "Lifetime Access", desc: "One-time payment for endless utility and assets use." },
     { icon: "🔄", title: "Free Future Updates", desc: "Stay current and download new files without extra costs." },
     { icon: "🛡️", title: "Genuine Products", desc: "Budget friendly, verified premium licensing quality." },
-    { icon: "⚡", title: "Instant Delivery", desc: "Download immediately from dashboard locker after checkout." },
-    { icon: "🤝", title: "Dedicated Support", desc: "We are here 24/7 via support email to help you succeed." },
+    { icon: "📦", title: "Instant Delivery", desc: "Download immediately from dashboard locker after checkout." },
+    { icon: "💬", title: "Dedicated Support", desc: "We are here 24/7 via support email to help you succeed." },
     { icon: "🌍", title: "Anywhere, Anytime", desc: "Access your digital vault purchase folder from any device." }
 ];
 
@@ -426,7 +429,13 @@ function routeTo(viewName) {
     // Setup Admin customized floating panel state
     const floatingCmsTrigger = document.getElementById('floatingCmsTrigger');
     if (floatingCmsTrigger) {
-        floatingCmsTrigger.classList.remove('hide');
+        if (ACTIVE_USER && ACTIVE_USER.role === 'admin') {
+            floatingCmsTrigger.classList.remove('hide');
+            floatingCmsTrigger.style.display = 'flex';
+        } else {
+            floatingCmsTrigger.classList.add('hide');
+            floatingCmsTrigger.style.display = 'none';
+        }
     }
 
     // Handle Mobile navbar drawer close on route change
@@ -441,13 +450,36 @@ function syncNavActions() {
     const btnAuth = document.getElementById('btnNavAuth');
     const badge = document.getElementById('navUserBadge');
     
+    // Toggle Admin Customizer visibility
+    const floatingCmsTrigger = document.getElementById('floatingCmsTrigger');
+    const btnExportCms = document.getElementById('btnExportCms');
+    const isAdmin = ACTIVE_USER && ACTIVE_USER.role === 'admin';
+    
+    if (floatingCmsTrigger) {
+        if (isAdmin) {
+            floatingCmsTrigger.classList.remove('hide');
+            floatingCmsTrigger.style.display = 'flex';
+        } else {
+            floatingCmsTrigger.classList.add('hide');
+            floatingCmsTrigger.style.display = 'none';
+        }
+    }
+    
+    if (btnExportCms) {
+        if (isAdmin) {
+            btnExportCms.style.display = 'block';
+        } else {
+            btnExportCms.style.display = 'none';
+        }
+    }
+    
     if (ACTIVE_USER) {
         btnAuth.classList.add('hide');
         badge.classList.remove('hide');
         
         let dashboardBtn = ACTIVE_USER.role === 'admin' ? 
             `<button class="btn-nav-primary" onclick="routeTo('admin-dashboard')" style="background:var(--accent-purple); display:flex; align-items:center; gap:8px;"><i data-lucide="shield-check" style="width:16px;"></i> Admin Portal</button>` :
-            `<button class="btn-nav-primary" onclick="routeTo('user-dashboard')" style="background:var(--grad-glow); border:1px solid var(--accent-blue);">👤 Dashboard</button>`;
+            `<button class="btn-nav-primary" onclick="routeTo('user-dashboard')" style="background:var(--grad-glow); border:1px solid var(--accent-blue); display:flex; align-items:center; gap:8px;"><i data-lucide="layout-dashboard" style="width:16px;"></i> Dashboard</button>`;
         
         badge.innerHTML = `
             <div style="display:flex; align-items:center; gap:12px;">
@@ -1085,8 +1117,8 @@ function renderHomeView() {
         CATEGORIES.forEach(cat => {
             if (cat.status !== 'enabled') return;
             
-            // Get products belonging to this category
-            const catProds = PRODUCTS.filter(p => p.category === cat.name && p.status !== 'disabled');
+            // Get products belonging to this category and marked as premium asset
+            const catProds = PRODUCTS.filter(p => p.category === cat.name && p.status !== 'disabled' && p.premiumAsset !== false);
             if (catProds.length === 0) return;
             
             const catSection = document.createElement('div');
@@ -1163,7 +1195,7 @@ function renderHomeView() {
             const card = document.createElement('div');
             card.className = 'testimonial-card';
             card.innerHTML = `
-                <div class="quote-icon">“</div>
+                <div class="quote-icon">�</div>
                 <div class="review-stars">⭐⭐⭐⭐⭐</div>
                 <p>"${rev.text}"</p>
                 <div class="reviewer-meta-box">
@@ -1450,9 +1482,9 @@ function loadProductDetails(productId) {
                 <div class="detail-title-block">
                     <h1>${prod.title}</h1>
                     <div class="detail-meta-strip">
-                        <span>🏷️ Category: <strong>${prod.category}</strong></span>
-                        <span>⭐ Ratings: <strong>${prod.rating}.0 / 5.0</strong></span>
-                        <span>⚡ Delivery: <strong>Instant Locker Access</strong></span>
+                        <span>📁 Category: <strong>${prod.category}</strong></span>
+                        <span>? Ratings: <strong>${prod.rating}.0 / 5.0</strong></span>
+                        <span>? Delivery: <strong>Instant Locker Access</strong></span>
                     </div>
                 </div>
                 
@@ -1483,10 +1515,10 @@ function loadProductDetails(productId) {
                 <button class="btn-add-cart-outline" onclick="addToCart('${prod.id}', true)">Add to Cart</button>
 
                 <div class="locker-delivery-info">
-                    <span>✔️ <strong>Lifetime Access</strong> with free updates folder</span>
-                    <span>✔️ <strong>Anti-sharing protected</strong> secure downloads locker</span>
-                    <span>✔️ Compatible with Desktop, Mobile, & Kindle</span>
-                    <span>✔️ One-time payment. Zero subscription fees.</span>
+                    <span>⚡ <strong>Lifetime Access</strong> with free updates folder</span>
+                    <span>🛡️ <strong>Anti-sharing protected</strong> secure downloads locker</span>
+                    <span>💻 Compatible with Desktop, Mobile, & Kindle</span>
+                    <span>💳 One-time payment. Zero subscription fees.</span>
                 </div>
             </div>
 
@@ -1555,7 +1587,7 @@ function renderUserDashboard() {
                 card.innerHTML = `
                     <div class="locker-item-info">
                         <h4>${item.title}</h4>
-                        <span>🔒 Secure Link: Verified Access • Lifetime Updated</span>
+                        <span>🔒 Secure Link: Verified Access � Lifetime Updated</span>
                     </div>
                     <button class="btn-download-now" onclick="triggerMockDownload('${item.title}', '${item.downloadUrl}')">
                         <i data-lucide="download"></i>
@@ -1847,6 +1879,7 @@ function editProduct(productId) {
     document.getElementById('prodFormZipUrlInput').value = prod.downloadUrl;
     document.getElementById('prodFormTagsInput').value = prod.tags;
     document.getElementById('prodFormFeaturedInput').checked = !!prod.featured;
+    document.getElementById('prodFormPremiumAssetInput').checked = prod.premiumAsset !== false;
 
     document.getElementById('productFormModal').classList.add('open');
 }
@@ -1865,20 +1898,21 @@ function handleProductFormSubmit(e) {
     const zip = document.getElementById('prodFormZipUrlInput').value.trim();
     const tags = document.getElementById('prodFormTagsInput').value.trim();
     const featured = document.getElementById('prodFormFeaturedInput') ? document.getElementById('prodFormFeaturedInput').checked : false;
+    const premiumAsset = document.getElementById('prodFormPremiumAssetInput') ? document.getElementById('prodFormPremiumAssetInput').checked : false;
 
     const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 
     if (existingId) {
         // EDIT mode - update locally
         PRODUCTS = PRODUCTS.map(p => String(p.id) === String(existingId) ? {
-            ...p, title, description: desc, category: cat, rating: rat, salePrice: sale, originalPrice: orig, thumbnail: thumb, downloadUrl: zip, tags, featured
+            ...p, title, description: desc, category: cat, rating: rat, salePrice: sale, originalPrice: orig, thumbnail: thumb, downloadUrl: zip, tags, featured, premiumAsset
         } : p);
         saveDb('products', PRODUCTS);
         showToast("Product Updated", '"' + title + '" details have been updated successfully!', "success");
         // Sync to API
         apiRequest('/api/products', {
             method: 'PUT',
-            body: JSON.stringify({ id: existingId, title, description: desc, category: cat, rating: rat, salePrice: sale, originalPrice: orig, thumbnail: thumb, downloadUrl: zip, tags, status: 'enabled', featured })
+            body: JSON.stringify({ id: existingId, title, description: desc, category: cat, rating: rat, salePrice: sale, originalPrice: orig, thumbnail: thumb, downloadUrl: zip, tags, status: 'enabled', featured, premiumAsset })
         }).then(res => {
             if (res && res.success && res.product) {
                 // Update local ID with server ID
@@ -1889,14 +1923,14 @@ function handleProductFormSubmit(e) {
     } else {
         // ADD mode - save locally with temp ID
         const tempId = 'temp_' + Date.now();
-        const newProd = { id: tempId, title, slug, description: desc, category: cat, rating: rat, salePrice: sale, originalPrice: orig, thumbnail: thumb, downloadUrl: zip, tags, featured, reviews: [] };
+        const newProd = { id: tempId, title, slug, description: desc, category: cat, rating: rat, salePrice: sale, originalPrice: orig, thumbnail: thumb, downloadUrl: zip, tags, featured, premiumAsset, reviews: [] };
         PRODUCTS.push(newProd);
         saveDb('products', PRODUCTS);
         showToast("Product Added", '"' + title + '" added to inventory catalog!', "success");
         // Sync to API
         apiRequest('/api/products', {
             method: 'POST',
-            body: JSON.stringify({ title, slug, description: desc, category: cat, rating: rat, salePrice: sale, originalPrice: orig, thumbnail: thumb, downloadUrl: zip, tags, featured })
+            body: JSON.stringify({ title, slug, description: desc, category: cat, rating: rat, salePrice: sale, originalPrice: orig, thumbnail: thumb, downloadUrl: zip, tags, featured, premiumAsset })
         }).then(res => {
             if (res && res.success && res.product) {
                 // Replace temp ID with real MongoDB ID
@@ -2047,8 +2081,24 @@ function handleContactForm(e) {
 
 // --- 11. INITIALIZATION ON DOM CONTENT LOAD ---
 document.addEventListener('DOMContentLoaded', async () => {
+    // Helper to dismiss loading overlay
+    function dismissLoadingOverlay() {
+        setTimeout(() => {
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay) {
+                overlay.style.opacity = '0';
+                setTimeout(() => { overlay.style.display = 'none'; }, 400);
+            }
+        }, 300);
+    }
+
+    try {
     // Load live data from MongoDB API
     await loadDataFromApi();
+    } catch (e) {
+        console.warn('API initialization failed, continuing with cached data:', e);
+    }
+
     // Initialize custom variables
     document.documentElement.style.setProperty('--logo-height', CMS_CONFIG.logoHeight || '52px');
     
@@ -2061,15 +2111,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.log('DigiVault: Initialization complete, API saves enabled.');
 
     // Force loading animation overlay fade out
-    setTimeout(() => {
-        const overlay = document.getElementById('loadingOverlay');
-        if (overlay) {
-            overlay.style.opacity = '0';
-            setTimeout(() => {
-                overlay.style.display = 'none';
-            }, 400);
-        }
-    }, 800);
+    dismissLoadingOverlay();
 
     // Synchronize custom HSL colors inside root stylesheet
     applyCmsTheme();
@@ -2083,6 +2125,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     applyCmsAnnouncement();
     applyCmsFooter();
     applyCmsPolicies();
+
+    // Sync nav auth state from persisted session
+    syncNavActions();
 
     // Render Home defaults
     renderHomeView();
@@ -2153,7 +2198,7 @@ function startHeroSlider() {
             
             slide.innerHTML = `
                 <div class="hero-content" style="text-align:left;">
-                    <div class="hero-tag" style="background:rgba(124,58,237,0.1); border:1px solid rgba(124,58,237,0.25); color:#a78bfa; display:inline-block; padding:4px 10px; border-radius:100px; font-size:0.75rem; font-weight:700; text-transform:uppercase; margin-bottom:12px;">🎉 FEATURED VAULT PRODUCT</div>
+                    <div class="hero-tag" style="background:rgba(124,58,237,0.1); border:1px solid rgba(124,58,237,0.25); color:#a78bfa; display:inline-block; padding:4px 10px; border-radius:100px; font-size:0.75rem; font-weight:700; text-transform:uppercase; margin-bottom:12px;">🔥 FEATURED VAULT PRODUCT</div>
                     <h1 style="font-size:2.8rem; font-weight:900; line-height:1.2; color:var(--text-white); margin-bottom:12px;">${prod.title}</h1>
                     <p style="font-size:1.05rem; color:var(--text-muted); line-height:1.5; margin-bottom:20px;">${prod.description}</p>
                     <div style="background:rgba(255,255,255,0.02); display:inline-flex; align-items:center; gap:12px; padding:6px 14px; border-radius:8px; border:1px solid var(--border-color); margin-bottom:20px;">
@@ -2163,7 +2208,7 @@ function startHeroSlider() {
                     </div>
                     <div class="hero-cta-group" style="display:flex; gap:12px;">
                         <button class="btn-premium-glow" onclick="${clickCta}">
-                            <span>🛒 GET THIS DEAL NOW</span>
+                            <span>⚡ GET THIS DEAL NOW</span>
                             <i data-lucide="shopping-cart"></i>
                         </button>
                         <button class="btn-secondary" onclick="loadProductDetails('${prod.id}')">Learn More</button>

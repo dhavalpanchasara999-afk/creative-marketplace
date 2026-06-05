@@ -612,6 +612,10 @@
                                         <input type="checkbox" id="prodFormFeaturedInput" style="width:auto; margin:0; cursor:pointer;">
                                         <label for="prodFormFeaturedInput" style="margin:0; cursor:pointer; font-weight:600; color:var(--text-white);">Feature in Homepage Hero Slider</label>
                                     </div>
+                                    <div class="input-group" style="display:flex; align-items:center; gap:8px; margin-top:0px; margin-bottom:12px;">
+                                        <input type="checkbox" id="prodFormPremiumAssetInput" style="width:auto; margin:0; cursor:pointer;">
+                                        <label for="prodFormPremiumAssetInput" style="margin:0; cursor:pointer; font-weight:600; color:var(--text-white);">Show in Premium Assets Section</label>
+                                    </div>
                                     <button type="submit" class="btn-premium-glow" style="margin-top: 12px; width: 100%; justify-content: center;">Save Product Details</button>
                                 </form>
                             </div>
@@ -1083,7 +1087,7 @@
         </div>
 
         <div class="customizer-footer">
-            <button class="btn-export-config" onclick="exportCmsConfiguration()"><i data-lucide="download"></i> Export CMS JSON Config</button>
+            <button class="btn-export-config" id="btnExportCms" onclick="exportCmsConfiguration()"><i data-lucide="download"></i> Export CMS JSON Config</button>
             <p style="font-size:0.7rem; color:var(--text-muted); text-align:center;">This saves all homepage text modifications to a loadable config block.</p>
         </div>
     </div>

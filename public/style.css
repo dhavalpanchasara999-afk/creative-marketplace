@@ -2429,3 +2429,11 @@ ul {
         grid-template-columns: 1fr;
     }
 }
+
+/* Admin Tab Content Toggle */
+.admin-tab-content {
+    display: none !important;
+}
+.admin-tab-content.active {
+    display: block !important;
+}
