@@ -62,6 +62,8 @@ const ProductSchema = new mongoose.Schema({
     originalPrice: { type: Number, required: true },
     thumbnail: { type: String, required: true },
     downloadUrl: { type: String, required: true },
+    shortDescription: { type: String },
+    customLandingUrl: { type: String },
     tags: [String],
     featured: { type: Boolean, default: false },
     premiumAsset: { type: Boolean, default: true },
