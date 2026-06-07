@@ -64,7 +64,7 @@ export async function POST(req) {
         }
 
         const body = await req.json();
-        const { title, description, category, salePrice, originalPrice, thumbnail, downloadUrl, tags, featured, premiumAsset } = body;
+        const { title, description, category, salePrice, originalPrice, thumbnail, downloadUrl, tags, featured, premiumAsset, shortDescription, customLandingUrl } = body;
 
         if (!title || !description || !category || !salePrice || !originalPrice || !thumbnail || !downloadUrl) {
             return NextResponse.json({ error: 'Missing required digital asset parameters' }, { status: 400 });
@@ -84,7 +84,9 @@ export async function POST(req) {
             downloadUrl,
             tags: tagsArray || [],
             featured: featured === true || featured === 'true',
-            premiumAsset: premiumAsset === true || premiumAsset === 'true'
+            premiumAsset: premiumAsset === true || premiumAsset === 'true',
+            shortDescription,
+            customLandingUrl
         });
 
         return NextResponse.json({ success: true, message: 'Digital product created successfully!', product: newProduct });
@@ -104,7 +106,7 @@ export async function PUT(req) {
         }
 
         const body = await req.json();
-        const { id, title, description, category, rating, salePrice, originalPrice, thumbnail, downloadUrl, tags, status, featured, premiumAsset } = body;
+        const { id, title, description, category, rating, salePrice, originalPrice, thumbnail, downloadUrl, tags, status, featured, premiumAsset, shortDescription, customLandingUrl } = body;
 
         if (!id) {
             return NextResponse.json({ error: 'Product ID is required for editing' }, { status: 400 });
@@ -126,7 +128,9 @@ export async function PUT(req) {
                 tags: tagsArray,
                 status,
                 featured: featured === true || featured === 'true',
-                premiumAsset: premiumAsset === true || premiumAsset === 'true'
+                premiumAsset: premiumAsset === true || premiumAsset === 'true',
+                shortDescription,
+                customLandingUrl
             },
             { new: true }
         );
