@@ -195,6 +195,8 @@ const INITIAL_PRODUCTS = [
         title: "300+ Premium Marathi Fonts & Converter",
         slug: "marathi-fonts-pack",
         description: "Get 1000+ premium Marathi calligraphy, bold display, and modern sans-serif fonts plus a free offline converter tool for ₹99. Instant delivery.",
+        shortDescription: "300+ Premium calligraphy, display & sans-serif Marathi fonts with conversion tool.",
+        customLandingUrl: "marathi-fonts.html",
         category: "Graphic Assets",
         rating: 5,
         salePrice: 99,
@@ -233,7 +235,7 @@ const INITIAL_CMS_CONFIG = {
     offerSub: "Last Chance! Price will increase soon. Don't miss out on premium assets at fraction of the cost.",
     countdownHours: 24,
     footerTagline: "The ultimate premium marketplace for creators, designers, and professionals.",
-    footerCopyright: "� 2026 DigiVault Premium Marketplace. All rights reserved. Built for creators.",
+    footerCopyright: "© 2026 DigiVault Premium Marketplace. All rights reserved. Built for creators.",
     
     // Extended contact configurations
     contactPhone: "+91 99999 88888",
@@ -1139,8 +1141,8 @@ function renderHomeView() {
                 card.className = 'product-card';
                 
                 // Buy button action
-                const clickBuy = prod.slug === 'marathi-calligraphy-fonts'
-                    ? "window.location.href='marathi-fonts.html'"
+                const clickBuy = prod.customLandingUrl
+                    ? "window.location.href='" + prod.customLandingUrl + "'"
                     : `addToCart('${prod.id}', true)`;
                 
                 card.innerHTML = `
@@ -1406,11 +1408,21 @@ function renderShopCatalog() {
 
 // Product Details dynamic loader page
 function loadProductDirectly(id) {
-    routeTo('detail');
-    loadProductDetails(id);
+    const prod = PRODUCTS.find(p => String(p.id) === String(id));
+    if (prod && prod.customLandingUrl) {
+        window.location.href = prod.customLandingUrl;
+    } else {
+        routeTo('detail');
+        loadProductDetails(id);
+    }
 }
 
 function loadProductDetails(productId) {
+    const prod = PRODUCTS.find(p => String(p.id) === String(productId));
+    if (prod && prod.customLandingUrl) {
+        window.location.href = prod.customLandingUrl;
+        return;
+    }
     routeTo('detail');
     const container = document.getElementById('productDetailsContainer');
     if (!container) return;
@@ -1482,9 +1494,9 @@ function loadProductDetails(productId) {
                 <div class="detail-title-block">
                     <h1>${prod.title}</h1>
                     <div class="detail-meta-strip">
-                        <span>📁 Category: <strong>${prod.category}</strong></span>
-                        <span>? Ratings: <strong>${prod.rating}.0 / 5.0</strong></span>
-                        <span>? Delivery: <strong>Instant Locker Access</strong></span>
+                        <span><i data-lucide="folder" style="width: 16px; height: 16px; display: inline; vertical-align: middle; margin-right: 4px;"></i> Category: <strong>${prod.category}</strong></span>
+                        <span><i data-lucide="star" style="width: 16px; height: 16px; display: inline; vertical-align: middle; margin-right: 4px;"></i> Ratings: <strong>${prod.rating}.0 / 5.0</strong></span>
+                        <span><i data-lucide="truck" style="width: 16px; height: 16px; display: inline; vertical-align: middle; margin-right: 4px;"></i> Delivery: <strong>Instant Locker Access</strong></span>
                     </div>
                 </div>
                 
@@ -1871,6 +1883,8 @@ function editProduct(productId) {
     
     document.getElementById('prodFormTitleInput').value = prod.title;
     document.getElementById('prodFormDescInput').value = prod.description;
+    document.getElementById('prodFormShortDescInput').value = prod.shortDescription || '';
+    document.getElementById('prodFormCustomLandingUrlInput').value = prod.customLandingUrl || '';
     document.getElementById('prodFormCategoryInput').value = prod.category;
     document.getElementById('prodFormRatingInput').value = prod.rating;
     document.getElementById('prodFormSalePriceInput').value = prod.salePrice;
@@ -1890,6 +1904,8 @@ function handleProductFormSubmit(e) {
     const existingId = document.getElementById('prodFormId').value;
     const title = document.getElementById('prodFormTitleInput').value.trim();
     const desc = document.getElementById('prodFormDescInput').value.trim();
+    const shortDesc = document.getElementById('prodFormShortDescInput').value.trim();
+    const customLandingUrl = document.getElementById('prodFormCustomLandingUrlInput').value.trim();
     const cat = document.getElementById('prodFormCategoryInput').value;
     const rat = Number(document.getElementById('prodFormRatingInput').value);
     const sale = Number(document.getElementById('prodFormSalePriceInput').value);
@@ -1905,14 +1921,14 @@ function handleProductFormSubmit(e) {
     if (existingId) {
         // EDIT mode - update locally
         PRODUCTS = PRODUCTS.map(p => String(p.id) === String(existingId) ? {
-            ...p, title, description: desc, category: cat, rating: rat, salePrice: sale, originalPrice: orig, thumbnail: thumb, downloadUrl: zip, tags, featured, premiumAsset
+            ...p, title, description: desc, shortDescription: shortDesc, customLandingUrl, category: cat, rating: rat, salePrice: sale, originalPrice: orig, thumbnail: thumb, downloadUrl: zip, tags, featured, premiumAsset
         } : p);
         saveDb('products', PRODUCTS);
         showToast("Product Updated", '"' + title + '" details have been updated successfully!', "success");
         // Sync to API
         apiRequest('/api/products', {
             method: 'PUT',
-            body: JSON.stringify({ id: existingId, title, description: desc, category: cat, rating: rat, salePrice: sale, originalPrice: orig, thumbnail: thumb, downloadUrl: zip, tags, status: 'enabled', featured, premiumAsset })
+            body: JSON.stringify({ id: existingId, title, description: desc, shortDescription: shortDesc, customLandingUrl, category: cat, rating: rat, salePrice: sale, originalPrice: orig, thumbnail: thumb, downloadUrl: zip, tags, status: 'enabled', featured, premiumAsset })
         }).then(res => {
             if (res && res.success && res.product) {
                 // Update local ID with server ID
@@ -1923,14 +1939,14 @@ function handleProductFormSubmit(e) {
     } else {
         // ADD mode - save locally with temp ID
         const tempId = 'temp_' + Date.now();
-        const newProd = { id: tempId, title, slug, description: desc, category: cat, rating: rat, salePrice: sale, originalPrice: orig, thumbnail: thumb, downloadUrl: zip, tags, featured, premiumAsset, reviews: [] };
+        const newProd = { id: tempId, title, slug, description: desc, shortDescription: shortDesc, customLandingUrl, category: cat, rating: rat, salePrice: sale, originalPrice: orig, thumbnail: thumb, downloadUrl: zip, tags, featured, premiumAsset, reviews: [] };
         PRODUCTS.push(newProd);
         saveDb('products', PRODUCTS);
         showToast("Product Added", '"' + title + '" added to inventory catalog!', "success");
         // Sync to API
         apiRequest('/api/products', {
             method: 'POST',
-            body: JSON.stringify({ title, slug, description: desc, category: cat, rating: rat, salePrice: sale, originalPrice: orig, thumbnail: thumb, downloadUrl: zip, tags, featured, premiumAsset })
+            body: JSON.stringify({ title, slug, description: desc, shortDescription: shortDesc, customLandingUrl, category: cat, rating: rat, salePrice: sale, originalPrice: orig, thumbnail: thumb, downloadUrl: zip, tags, featured, premiumAsset })
         }).then(res => {
             if (res && res.success && res.product) {
                 // Replace temp ID with real MongoDB ID
@@ -2191,16 +2207,16 @@ function startHeroSlider() {
             slide.style.opacity = isActive ? '1' : '0';
             slide.style.transition = 'opacity 0.5s ease';
             
-            // If it is the Marathi Fonts pack, redirect to marathi-fonts.html for checkout!
-            const clickCta = prod.slug === 'marathi-calligraphy-fonts' 
-                ? "window.location.href='marathi-fonts.html'" 
+            // If it has a custom landing URL, redirect there!
+            const clickCta = prod.customLandingUrl 
+                ? "window.location.href='" + prod.customLandingUrl + "'" 
                 : `addToCart('${prod.id}', true)`;
             
             slide.innerHTML = `
                 <div class="hero-content" style="text-align:left;">
                     <div class="hero-tag" style="background:rgba(124,58,237,0.1); border:1px solid rgba(124,58,237,0.25); color:#a78bfa; display:inline-block; padding:4px 10px; border-radius:100px; font-size:0.75rem; font-weight:700; text-transform:uppercase; margin-bottom:12px;">🔥 FEATURED VAULT PRODUCT</div>
                     <h1 style="font-size:2.8rem; font-weight:900; line-height:1.2; color:var(--text-white); margin-bottom:12px;">${prod.title}</h1>
-                    <p style="font-size:1.05rem; color:var(--text-muted); line-height:1.5; margin-bottom:20px;">${prod.description}</p>
+                    <p style="font-size:1.05rem; color:var(--text-muted); line-height:1.5; margin-bottom:20px;">${prod.shortDescription || (prod.description.length > 120 ? prod.description.slice(0, 117) + '...' : prod.description)}</p>
                     <div style="background:rgba(255,255,255,0.02); display:inline-flex; align-items:center; gap:12px; padding:6px 14px; border-radius:8px; border:1px solid var(--border-color); margin-bottom:20px;">
                         <span style="font-size:0.82rem; color:var(--text-dim); text-decoration:line-through;">₹${prod.originalPrice.toLocaleString('en-IN')}</span>
                         <span style="font-size:1.1rem; color:#3b82f6; font-weight:800;">₹${prod.salePrice} /-</span>

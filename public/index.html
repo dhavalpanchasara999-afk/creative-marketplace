@@ -572,6 +572,14 @@
                                         <label for="prodFormDescInput">Description</label>
                                         <textarea id="prodFormDescInput" rows="3" required></textarea>
                                     </div>
+                                    <div class="input-group">
+                                        <label for="prodFormShortDescInput">Short Description (for Hero Section)</label>
+                                        <input type="text" id="prodFormShortDescInput" placeholder="Brief summary of the product...">
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="prodFormCustomLandingUrlInput">Custom Landing URL (Optional)</label>
+                                        <input type="text" id="prodFormCustomLandingUrlInput" placeholder="e.g. marathi-fonts.html">
+                                    </div>
                                     <div class="input-row">
                                         <div class="input-group">
                                             <label for="prodFormCategoryInput">Category</label>
@@ -1093,7 +1101,7 @@
     </div>
 
     <!-- Floating settings customize panel trigger button (Admin privilege indicator) -->
-    <button class="floating-customizer-btn" id="floatingCmsTrigger" onclick="toggleCustomizerSidebar()">
+    <button class="floating-customizer-btn" id="floatingCmsTrigger" onclick="toggleCustomizerSidebar()" style="display: none;">
         <i data-lucide="palette"></i>
         <span>Visual Customizer</span>
     </button>
@@ -1113,17 +1121,7 @@
         </div>
     </div>
 
-    <!-- Page load overlay spinner -->
-    <div id="loadingOverlay" style="position:fixed; top:0; left:0; width:100vw; height:100vh; background:var(--bg-darker); z-index:99999; display:flex; align-items:center; justify-content:center; transition:opacity 0.4s ease;">
-        <div style="display:flex; flex-direction:column; align-items:center; gap:20px;">
-            <div style="width:50px; height:50px; border:3px solid var(--accent-purple); border-top-color:transparent; border-radius:50%; animation:spin 1s infinite linear;"></div>
-            <p style="font-weight:700; letter-spacing:1px; font-size:0.9rem;" class="text-gradient">SECURE VAULT LOGGING IN...</p>
-        </div>
-    </div>
-    
-    <style>
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-    </style>
+
 
     <!-- Core Dynamic Operations Script -->
     <script src="script.js"></script>
