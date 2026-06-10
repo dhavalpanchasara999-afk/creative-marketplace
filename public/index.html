@@ -14,6 +14,10 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Loading Overlay (masks FOUC) -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
 
     <!-- Announcement Bar -->
     <div class="announcement-bar" id="announcementBar" style="background: var(--accent-purple); text-align: center; padding: 10px; font-weight: 600; font-size: 0.88rem; z-index: 1001; position: relative;">
@@ -41,6 +45,10 @@
 
             <!-- Navigation Action Bar -->
             <div class="nav-actions">
+                <button class="icon-btn" onclick="toggleTheme()" title="Toggle Theme" id="themeToggleBtn" style="margin-right: 10px;">
+                    <i data-lucide="sun" class="theme-icon-sun"></i>
+                    <i data-lucide="moon" class="theme-icon-moon" style="display:none;"></i>
+                </button>
                 <button class="icon-btn" onclick="toggleCartDrawer()" title="View Cart">
                     <i data-lucide="shopping-cart"></i>
                     <span class="badge-count" id="navCartCount">0</span>
@@ -306,12 +314,57 @@
                         <button type="submit" class="btn-auth-submit" style="margin-top: 24px;">Login to Vault</button>
                     </form>
 
-                    <div class="auth-card-footer">
+                    <div class="auth-card-footer" style="display: flex; flex-direction: column; gap: 8px;">
                         <span>Don't have an account? <a href="#signup" onclick="routeTo('signup')">Sign Up Now</a></span>
+                        <span>Forgot your password? <a href="#forgot-password" onclick="routeTo('forgot-password')">Reset Password</a></span>
                     </div>
                 </div>
             </div>
         </section>
+        <!-- 4B. AUTH FORGOT PASSWORD VIEW -->
+        <section id="forgotPasswordView" class="page-view">
+            <div class="container auth-page-wrapper">
+                <div class="auth-form-card">
+                    <h2>Reset Password</h2>
+                    <p>Enter your email address and we will send you a secure link to reset your password.</p>
+                    
+                    <form id="forgotPasswordForm" onsubmit="handleForgotPasswordSubmit(event)">
+                        <div class="input-group">
+                            <label for="forgotPasswordEmail">Email Address</label>
+                            <input type="email" id="forgotPasswordEmail" placeholder="yourname@domain.com" required>
+                        </div>
+                        <button type="submit" class="btn-auth-submit" style="margin-top: 24px;">Send Reset Link</button>
+                    </form>
+
+                    <div class="auth-card-footer">
+                        <span>Remembered password? <a href="#login" onclick="routeTo('login')">Back to Login</a></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4C. AUTH RESET PASSWORD COMPLETION VIEW -->
+        <section id="resetPasswordCompletionView" class="page-view">
+            <div class="container auth-page-wrapper">
+                <div class="auth-form-card">
+                    <h2>Set New Password</h2>
+                    <p>Choose a secure new password for your locker account.</p>
+                    
+                    <form id="resetPasswordCompletionForm" onsubmit="handleResetPasswordCompletionSubmit(event)">
+                        <div class="input-group">
+                            <label for="newPasswordInput">New Password</label>
+                            <input type="password" id="newPasswordInput" placeholder="At least 6 characters" required>
+                        </div>
+                        <button type="submit" class="btn-auth-submit" style="margin-top: 24px;">Update Password</button>
+                    </form>
+
+                    <div class="auth-card-footer">
+                        <span>Back to <a href="#login" onclick="routeTo('login')">Login</a></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
 
         <!-- 5. AUTH SIGNUP VIEW -->
         <section id="signupView" class="page-view">
@@ -450,6 +503,10 @@
                     <div class="dash-nav-item" onclick="switchAdminTab(this, 'admin-orders')">
                         <i data-lucide="shopping-bag"></i>
                         <span>Sales & Orders</span>
+                    </div>
+                    <div class="dash-nav-item" onclick="switchAdminTab(this, 'admin-analytics')">
+                        <i data-lucide="trending-up"></i>
+                        <span>Sales Analytics</span>
                     </div>
                     <div class="dash-nav-item" onclick="switchAdminTab(this, 'admin-categories')">
                         <i data-lucide="folder-tree"></i>
@@ -650,6 +707,58 @@
                                     </tr>
                                 </thead>
                                 <tbody id="adminOrdersTableBody">
+                                    <!-- Loaded dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    
+                    <!-- Tab 4: Sales Analytics -->
+                    <div id="admin-analytics" class="admin-tab-content" style="display: none;">
+                        <div class="dash-section-header">
+                            <h3>Sales & Products Analytics</h3>
+                            <p>Detailed breakdown of weekly, monthly, and product-wise revenue metrics.</p>
+                        </div>
+                        
+                        <!-- Mini Analytics Cards -->
+                        <div class="admin-metrics-row" style="margin-top: 24px;">
+                            <div class="metric-tile-card">
+                                <div class="metric-tile-icon"><i data-lucide="calendar"></i></div>
+                                <div class="metric-tile-data">
+                                    <h3 id="aWeeklySales">₹ 0</h3>
+                                    <span>Weekly Sales (Last 7 Days)</span>
+                                </div>
+                            </div>
+                            <div class="metric-tile-card">
+                                <div class="metric-tile-icon"><i data-lucide="calendar-days"></i></div>
+                                <div class="metric-tile-data">
+                                    <h3 id="aMonthlySales">₹ 0</h3>
+                                    <span>Monthly Sales (Last 30 Days)</span>
+                                </div>
+                            </div>
+                            <div class="metric-tile-card">
+                                <div class="metric-tile-icon"><i data-lucide="pie-chart"></i></div>
+                                <div class="metric-tile-data">
+                                    <h3 id="aTotalSales">₹ 0</h3>
+                                    <span>Total Sales Revenue</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="dash-section-header" style="margin-top: 40px; border-bottom: none;">
+                            <h3>Product-wise Performance</h3>
+                        </div>
+                        <div class="admin-table-container">
+                            <table class="admin-data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Product Title</th>
+                                        <th>Purchases Count</th>
+                                        <th>Total Revenue Generated</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminProductAnalyticsBody">
                                     <!-- Loaded dynamically -->
                                 </tbody>
                             </table>

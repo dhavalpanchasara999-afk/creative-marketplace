@@ -222,6 +222,7 @@ const INITIAL_CATEGORIES = [
 const INITIAL_CMS_CONFIG = {
     brandName: "DigiVault",
     brandDomain: "digivault.in",
+    heroBg: "",
     supportEmail: "support@digivault.in",
     logoUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuCdERfxvscrw9MZOLZxbaEZTBme3y0v-I795Oblk90GRbwajZKrVuCwIznmDf2PScUjdQf54FUcgFRiJc-_qGqXiEMCu3y2Zy05GrcGiXDcCuq-5Xla9PVAULpPtNxJcXQrGJlCaCe1IDQ1Fd699SDs8HtIWqmeO2BjbZDw4cgA0-ohG8aF5Y1Z8e-Qn2Y9h9cKsrdq9YXovNk1tGSID5fV4oqkgX245hdh2AegWCzuO2oaVUUXOrdp_wULt7lkwOrjBTxbP5Awf1sb",
     logoHeight: "52px",
@@ -369,6 +370,8 @@ function routeTo(viewName) {
         'detail': 'detailView',
         'login': 'loginView',
         'signup': 'signupView',
+        'forgot-password': 'forgotPasswordView',
+        'reset-password': 'resetPasswordCompletionView',
         'user-dashboard': 'userDashboardView',
         'admin-dashboard': 'adminDashboardView',
         'terms': 'termsView',
@@ -520,6 +523,7 @@ function loadCmsValuesIntoInputs() {
     setCmsVal('cmsHeroHeadline', 'heroHeadline');
     setCmsVal('cmsHeroSub', 'heroSub');
     setCmsVal('cmsHeroCtaText', 'heroCtaLabel');
+    setCmsVal('cmsHeroBg', 'heroBg');
     setCmsVal('cmsAnnText', 'announcementText');
     setCmsVal('cmsOfferTitle', 'offerTitle');
     setCmsVal('cmsOfferSub', 'offerSub');
@@ -625,6 +629,13 @@ function applyCmsHero() {
     CMS_CONFIG.heroHeadline = head;
     CMS_CONFIG.heroSub = sub;
     CMS_CONFIG.heroCtaLabel = cta;
+    
+    const bgVal = document.getElementById('cmsHeroBg') ? document.getElementById('cmsHeroBg').value : '';
+    CMS_CONFIG.heroBg = bgVal;
+    const heroSection = document.querySelector('.hero-section');
+    if (heroSection) {
+        heroSection.style.background = bgVal || '';
+    }
 
     const hTitle = document.getElementById('homeHeroTitle');
     const hSub = document.getElementById('homeHeroSubtitle');
@@ -1684,37 +1695,107 @@ function handleSettingsUpdate(e) {
 }
 
 // --- 9. ADMINISTRATIVE PORTAL CONTROL PANEL ENGINE ---
-function renderAdminDashboard() {
-    // 1. Calculate KPI Metrics overview
-    const revTotal = ORDERS.reduce((acc, o) => o.status === 'Paid' ? acc + o.totalPaid : acc, 0);
-    const downloadsTotal = getDb('download_counter', 42); // default seeding
-
-    document.getElementById('mSales').textContent = `₹ ${revTotal.toLocaleString('en-IN')}`;
-    document.getElementById('mOrders').textContent = ORDERS.length;
-    document.getElementById('mUsers').textContent = USERS.length;
-    document.getElementById('mDownloads').textContent = downloadsTotal;
-
-    // 2. Load recent completed orders table
-    const recentOrdersBody = document.getElementById('adminRecentOrdersBody');
-    if (recentOrdersBody) {
-        recentOrdersBody.innerHTML = '';
-        const recent = ORDERS.slice().reverse().slice(0, 5); // top 5
+async function renderAdminDashboard() {
+    try {
+        const [ordersRes, usersRes, analyticsRes] = await Promise.all([
+            apiRequest('/api/orders'),
+            apiRequest('/api/users'),
+            apiRequest('/api/analytics')
+        ]);
         
-        if (recent.length === 0) {
-            recentOrdersBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-dim);">No transactions captured yet.</td></tr>`;
-        } else {
-            recent.forEach(o => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><strong>#${o.orderId}</strong></td>
-                    <td>${o.userEmail}</td>
-                    <td>${o.products.map(p => p.title).join(', ').slice(0, 40)}...</td>
-                    <td>₹ ${o.totalPaid}</td>
-                    <td>${o.date}</td>
-                    <td><span class="badge-status paid">${o.status}</span></td>
-                `;
-                recentOrdersBody.appendChild(tr);
-            });
+        if (ordersRes && ordersRes.success) {
+            ORDERS = ordersRes.orders;
+            saveDb('orders', ORDERS);
+        }
+        if (usersRes && usersRes.success) {
+            USERS = usersRes.users;
+            saveDb('users', USERS);
+        }
+        
+        const revTotal = ORDERS.reduce((acc, o) => o.status === 'Paid' ? acc + o.totalPaid : acc, 0);
+        const downloadsTotal = getDb('download_counter', 42);
+
+        document.getElementById('mSales').textContent = `₹ ${revTotal.toLocaleString('en-IN')}`;
+        document.getElementById('mOrders').textContent = ORDERS.length;
+        document.getElementById('mUsers').textContent = USERS.length;
+        document.getElementById('mDownloads').textContent = downloadsTotal;
+
+        const recentOrdersBody = document.getElementById('adminRecentOrdersBody');
+        if (recentOrdersBody) {
+            recentOrdersBody.innerHTML = '';
+            const recent = ORDERS.slice().reverse().slice(0, 5);
+            if (recent.length === 0) {
+                recentOrdersBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-dim);">No transactions captured yet.</td></tr>`;
+            } else {
+                recent.forEach(o => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><strong>#${o.orderId}</strong></td>
+                        <td>${o.userEmail}</td>
+                        <td>${o.products.map(p => p.title).join(', ').slice(0, 40)}...</td>
+                        <td>₹ ${o.totalPaid}</td>
+                        <td>${new Date(o.createdAt).toLocaleDateString()}</td>
+                        <td><span class="badge-status paid">${o.status}</span></td>
+                    `;
+                    recentOrdersBody.appendChild(tr);
+                });
+            }
+        }
+
+        if (analyticsRes && analyticsRes.success && analyticsRes.analytics) {
+            const ana = analyticsRes.analytics;
+            document.getElementById('aWeeklySales').textContent = `₹ ${ana.weeklySales.toLocaleString('en-IN')}`;
+            document.getElementById('aMonthlySales').textContent = `₹ ${ana.monthlySales.toLocaleString('en-IN')}`;
+            document.getElementById('aTotalSales').textContent = `₹ ${ana.totalRevenue.toLocaleString('en-IN')}`;
+            
+            const anaBody = document.getElementById('adminProductAnalyticsBody');
+            if (anaBody) {
+                anaBody.innerHTML = '';
+                if (ana.productWise.length === 0) {
+                    anaBody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-dim);">No product analytics data available.</td></tr>`;
+                } else {
+                    ana.productWise.forEach(p => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td><strong>${p.title}</strong></td>
+                            <td>${p.count}</td>
+                            <td>₹ ${Math.round(p.revenue).toLocaleString('en-IN')}</td>
+                        `;
+                        anaBody.appendChild(tr);
+                    });
+                }
+            }
+        }
+    } catch (err) {
+        console.warn('API metrics loading failed, using offline fallback:', err);
+        const revTotal = ORDERS.reduce((acc, o) => o.status === 'Paid' ? acc + o.totalPaid : acc, 0);
+        const downloadsTotal = getDb('download_counter', 42);
+
+        document.getElementById('mSales').textContent = `₹ ${revTotal.toLocaleString('en-IN')}`;
+        document.getElementById('mOrders').textContent = ORDERS.length;
+        document.getElementById('mUsers').textContent = USERS.length;
+        document.getElementById('mDownloads').textContent = downloadsTotal;
+
+        const recentOrdersBody = document.getElementById('adminRecentOrdersBody');
+        if (recentOrdersBody) {
+            recentOrdersBody.innerHTML = '';
+            const recent = ORDERS.slice().reverse().slice(0, 5);
+            if (recent.length === 0) {
+                recentOrdersBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-dim);">No transactions captured yet.</td></tr>`;
+            } else {
+                recent.forEach(o => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><strong>#${o.orderId}</strong></td>
+                        <td>${o.userEmail}</td>
+                        <td>${o.products.map(p => p.title).join(', ').slice(0, 40)}...</td>
+                        <td>₹ ${o.totalPaid}</td>
+                        <td>${o.date}</td>
+                        <td><span class="badge-status paid">${o.status}</span></td>
+                    `;
+                    recentOrdersBody.appendChild(tr);
+                });
+            }
         }
     }
 
@@ -2097,6 +2178,8 @@ function handleContactForm(e) {
 
 // --- 11. INITIALIZATION ON DOM CONTENT LOAD ---
 document.addEventListener('DOMContentLoaded', async () => {
+    // Initialize theme
+    initTheme();
     // Helper to dismiss loading overlay
     function dismissLoadingOverlay() {
         setTimeout(() => {
@@ -2145,8 +2228,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Sync nav auth state from persisted session
     syncNavActions();
 
-    // Render Home defaults
-    renderHomeView();
+    // Check if resetToken is in query parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const resetToken = urlParams.get('resetToken');
+    if (resetToken) {
+        routeTo('reset-password');
+    } else {
+        // Render Home defaults
+        renderHomeView();
+    }
 
     // Init Lucide Icons bindings
     lucide.createIcons();
@@ -2270,7 +2360,7 @@ function startHeroSlider() {
             const leftArrow = document.createElement('button');
             leftArrow.className = 'hero-nav-arrow left';
             leftArrow.style.position = 'absolute';
-            leftArrow.style.left = '10px';
+            leftArrow.style.left = '-60px';
             leftArrow.style.top = '50%';
             leftArrow.style.transform = 'translateY(-50%)';
             leftArrow.style.width = '44px';
@@ -2307,7 +2397,7 @@ function startHeroSlider() {
             const rightArrow = document.createElement('button');
             rightArrow.className = 'hero-nav-arrow right';
             rightArrow.style.position = 'absolute';
-            rightArrow.style.right = '10px';
+            rightArrow.style.right = '-60px';
             rightArrow.style.top = '50%';
             rightArrow.style.transform = 'translateY(-50%)';
             rightArrow.style.width = '44px';
@@ -2357,4 +2447,87 @@ function startHeroSlider() {
             renderSlides();
         }, 5000);
     }
+}
+
+// --- 20. LIGHT/DARK THEME ENGINE ---
+function initTheme() {
+    const theme = localStorage.getItem('theme') || 'dark';
+    const sunIcon = document.querySelector('.theme-icon-sun');
+    const moonIcon = document.querySelector('.theme-icon-moon');
+    
+    if (theme === 'light') {
+        document.body.classList.add('light-theme');
+        if (sunIcon) sunIcon.style.display = 'none';
+        if (moonIcon) moonIcon.style.display = 'inline-block';
+    } else {
+        document.body.classList.remove('light-theme');
+        if (sunIcon) sunIcon.style.display = 'inline-block';
+        if (moonIcon) moonIcon.style.display = 'none';
+    }
+}
+
+function toggleTheme() {
+    const currentTheme = localStorage.getItem('theme') || 'dark';
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('theme', newTheme);
+    initTheme();
+}
+
+
+// --- 21. SECURE PASSWORD RESET OPERATIONS ---
+function handleForgotPasswordSubmit(e) {
+    e.preventDefault();
+    const email = document.getElementById('forgotPasswordEmail').value.trim();
+    
+    showToast("Sending...", "Sending password reset request...", "info");
+    
+    apiRequest('/api/auth/reset', {
+        method: 'POST',
+        body: JSON.stringify({ action: 'request', email })
+    }).then(res => {
+        if (res && res.success) {
+            showToast("Reset Link Sent", "If this email exists, a secure reset link has been sent.", "success");
+            document.getElementById('forgotPasswordForm').reset();
+            routeTo('login');
+        } else {
+            showToast("Error", (res && res.error) || "Failed to send reset link", "error");
+        }
+    }).catch(err => {
+        showToast("Error", "Network connection error", "error");
+    });
+}
+
+function handleResetPasswordCompletionSubmit(e) {
+    e.preventDefault();
+    const newPassword = document.getElementById('newPasswordInput').value.trim();
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('resetToken');
+    
+    if (!token) {
+        showToast("Error", "Missing secure token from URL", "error");
+        return;
+    }
+    
+    showToast("Updating...", "Updating your password...", "info");
+    
+    apiRequest('/api/auth/reset', {
+        method: 'POST',
+        body: JSON.stringify({ action: 'reset', token, newPassword })
+    }).then(res => {
+        if (res && res.success) {
+            showToast("Success", "Password updated successfully! Please log in.", "success");
+            document.getElementById('resetPasswordCompletionForm').reset();
+            
+            // Clean URL query parameters
+            const url = new URL(window.location);
+            url.searchParams.delete('resetToken');
+            window.history.replaceState({}, document.title, url.toString());
+            
+            routeTo('login');
+        } else {
+            showToast("Error", (res && res.error) || "Failed to update password", "error");
+        }
+    }).catch(err => {
+        showToast("Error", "Network connection error", "error");
+    });
 }

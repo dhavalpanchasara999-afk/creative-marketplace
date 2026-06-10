@@ -2437,3 +2437,104 @@ ul {
 .admin-tab-content.active {
     display: block !important;
 }
+
+/* ==========================================
+   LOADING OVERLAY (FOUC PREVENTION) & SPINNER
+   ========================================== */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #06070a; /* Same as --bg-darker */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+    opacity: 1;
+    visibility: visible;
+}
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(139, 92, 246, 0.1);
+    border-radius: 50%;
+    border-top-color: var(--accent-purple);
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ==========================================
+   LIGHT/DARK THEME CUSTOMIZATIONS
+   ========================================== */
+body.light-theme {
+    --bg-darker: #f0f2f5;
+    --bg-dark: #ffffff;
+    --bg-card: #f8fafc;
+    --bg-card-hover: #edf2f7;
+    --border-color: rgba(0, 0, 0, 0.08);
+    --border-hover: rgba(59, 130, 246, 0.5);
+    --text-main: #1a202c;
+    --text-muted: #4a5568;
+    --text-dim: #718096;
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .loading-overlay {
+    background: #f0f2f5;
+}
+
+/* Specific light theme text readability fixes */
+body.light-theme .navbar {
+    background: rgba(255, 255, 255, 0.85);
+}
+body.light-theme .nav-links a.active-nav,
+body.light-theme .logo-part-1,
+body.light-theme .logo-text-fallback,
+body.light-theme .logo-link {
+    color: #1a202c !important;
+}
+body.light-theme .nav-links a {
+    color: #4a5568;
+}
+body.light-theme .nav-links a:hover {
+    color: #1a202c;
+}
+body.light-theme .footer-links-col h4,
+body.light-theme .footer-brand h4 {
+    color: #1a202c !important;
+}
+body.light-theme .footer-tagline,
+body.light-theme .footer-links-col a,
+body.light-theme .footer-bottom-bar p {
+    color: #4a5568 !important;
+}
+body.light-theme .btn-secondary {
+    background: rgba(0, 0, 0, 0.02);
+    color: #1a202c;
+}
+body.light-theme .admin-sidebar {
+    background: #edf2f7;
+    border-right: 1px solid rgba(0, 0, 0, 0.08);
+}
+body.light-theme .custom-tab-btn {
+    color: #718096;
+}
+body.light-theme .custom-tab-btn.active {
+    color: #1a202c;
+}
+body.light-theme .theme-icon-sun {
+    display: none !important;
+}
+body.light-theme .theme-icon-moon {
+    display: inline-block !important;
+    color: #1a202c;
+}
+body.light-theme .icon-btn i {
+    color: #1a202c;
+}

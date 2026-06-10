@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { connectToDatabase, Order, Product, User } from '../../../lib/db';
+import { sendPurchaseEmail } from '../../../lib/email';
 
 export const dynamic = 'force-dynamic';
 
@@ -85,8 +86,22 @@ export async function POST(req) {
             }
         }
 
-        // Trigger delivery email simulation
+        // Trigger delivery email
         console.log(`[WEBHOOK EMAIL] Webhook verified payment.captured. Sending receipt to ${email} for order ${orderId}.`);
+        try {
+            await sendPurchaseEmail({
+                to: email,
+                orderId: orderId,
+                products: dbProducts.map(p => ({
+                    productId: p._id,
+                    title: p.title,
+                    downloadUrl: p.downloadUrl
+                })),
+                totalPaid: totalPaid
+            });
+        } catch (emailErr) {
+            console.error('[Webhook Email Trigger Error]', emailErr);
+        }
 
         return NextResponse.json({ success: true, message: 'Webhook processed and order fulfilled successfully!' });
 

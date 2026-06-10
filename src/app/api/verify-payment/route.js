@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { connectToDatabase, Order, Product, User } from '../../../lib/db';
 import { getAuthenticatedUser } from '../../../lib/auth';
+import { sendPurchaseEmail } from '../../../lib/email';
 
 export const dynamic = 'force-dynamic';
 
@@ -83,8 +84,18 @@ export async function POST(req) {
             await user.save();
         }
 
-        // Trigger mock delivery email (prints to stdout)
+        // Trigger delivery email
         console.log(`[EMAIL DELIVERY] Sending products download receipt to ${sessionUser.email} for order ${razorpay_order_id}.`);
+        try {
+            await sendPurchaseEmail({
+                to: sessionUser.email,
+                orderId: razorpay_order_id,
+                products: purchasedList,
+                totalPaid: finalTotal
+            });
+        } catch (emailErr) {
+            console.error('[Payment Verification Email Trigger Error]', emailErr);
+        }
 
         return NextResponse.json({
             success: true,
