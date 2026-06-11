@@ -1,0 +1,216 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Title | DigiVault</title>
+    <meta name="description" content="Your SEO description here.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!--
+    ╔══════════════════════════════════════════════════════════════════╗
+    ║  REQUIRED: Always include these two scripts first — in order!   ║
+    ╚══════════════════════════════════════════════════════════════════╝
+    site-config.js  → Provides SITE_CONFIG (domain, brand info)
+    auth-bridge.js  → Provides authBridge (signup/login/order/verify)
+    These ensure the landing page shares the same auth session as the
+    main app (index.html) via identical localStorage keys.
+    -->
+    <script src="site-config.js"></script>
+    <script src="auth-bridge.js"></script>
+
+    <!-- Lucide Icons (after bridge scripts) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- DigiVault Shared Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ── NAV ─────────────────────────────────────────────────────────── -->
+    <header class="navbar">
+        <div class="container navbar-container">
+            <a href="index.html" class="logo-link">
+                <span class="logo-text" style="font-size:1.4rem;font-weight:900;background:var(--grad-primary);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">DIGIVAULT</span>
+            </a>
+            <a href="index.html" class="btn-nav-primary" style="font-size:0.85rem;padding:8px 16px;">
+                <i data-lucide="arrow-left" style="width:14px;"></i> Back to Store
+            </a>
+        </div>
+    </header>
+
+    <!-- ── YOUR LANDING PAGE CONTENT HERE ─────────────────────────────── -->
+    <main>
+        <section style="padding: 80px 20px; text-align: center;">
+            <h1>Your Product Headline</h1>
+            <p>Subheadline or description.</p>
+        </section>
+
+        <!-- ── CHECKOUT SECTION ──────────────────────────────────────────── -->
+        <section id="checkoutBlock" style="padding: 60px 20px;">
+            <div style="max-width: 480px; margin: 0 auto;">
+                <form id="checkoutForm" onsubmit="event.preventDefault(); handleCheckout();">
+                    <div id="checkoutFirstName-wrap" style="margin-bottom:14px;">
+                        <input type="text" id="checkoutFirstName" placeholder="First Name" required style="width:100%; padding:10px 12px; border-radius:6px; border:1px solid var(--border-color); background:var(--bg-darker); color:var(--text-white); font-family:inherit;">
+                    </div>
+                    <div id="checkoutLastName-wrap" style="margin-bottom:14px;">
+                        <input type="text" id="checkoutLastName" placeholder="Last Name" required style="width:100%; padding:10px 12px; border-radius:6px; border:1px solid var(--border-color); background:var(--bg-darker); color:var(--text-white); font-family:inherit;">
+                    </div>
+                    <div style="margin-bottom:14px;">
+                        <input type="email" id="checkoutEmail" placeholder="Email Address" required style="width:100%; padding:10px 12px; border-radius:6px; border:1px solid var(--border-color); background:var(--bg-darker); color:var(--text-white); font-family:inherit;">
+                    </div>
+                    <div style="margin-bottom:14px;">
+                        <input type="text" id="checkoutPhone" placeholder="Phone Number" required style="width:100%; padding:10px 12px; border-radius:6px; border:1px solid var(--border-color); background:var(--bg-darker); color:var(--text-white); font-family:inherit;">
+                    </div>
+                    <!-- Password wrapper — hidden automatically if user is already logged in -->
+                    <div id="passwordFieldWrapper" style="margin-bottom:14px;">
+                        <input type="password" id="checkoutPassword" placeholder="Create Password (for your locker)" required style="width:100%; padding:10px 12px; border-radius:6px; border:1px solid var(--border-color); background:var(--bg-darker); color:var(--text-white); font-family:inherit;">
+                    </div>
+                    <button type="submit" style="width:100%; background:var(--grad-primary); border:none; padding:14px; font-size:1rem; font-weight:800; border-radius:8px; color:#fff; cursor:pointer;">
+                        Pay Securely with Razorpay
+                    </button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- ── FOOTER ──────────────────────────────────────────────────────── -->
+    <footer style="text-align:center; padding:24px; color:var(--text-dim); font-size:0.8rem;">
+        &copy; 2026 DigiVault. All rights reserved. |
+        <a href="index.html" style="color:var(--text-muted);">Main Store</a>
+    </footer>
+
+    <!-- Razorpay Payment SDK -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // ── PRE-FILL IF ALREADY LOGGED IN ─────────────────────────────────────
+        // This is the key pattern — always call this on page load.
+        // If the user is already logged in (from main app or previous landing page),
+        // their form is pre-filled and password field is hidden.
+        (function prefillIfLoggedIn() {
+            if (!authBridge.isLoggedIn()) return;
+            const user = authBridge.getUser();
+            if (!user) return;
+
+            const nameParts = (user.name || '').split(' ');
+            const fnEl = document.getElementById('checkoutFirstName');
+            const lnEl = document.getElementById('checkoutLastName');
+            const emEl = document.getElementById('checkoutEmail');
+            if (fnEl) fnEl.value = nameParts[0] || '';
+            if (lnEl) lnEl.value = nameParts.slice(1).join(' ') || '';
+            if (emEl) emEl.value = user.email || '';
+
+            // Hide and de-require the password field
+            const pwWrap = document.getElementById('passwordFieldWrapper');
+            if (pwWrap) pwWrap.style.display = 'none';
+            const pwInput = document.getElementById('checkoutPassword');
+            if (pwInput) pwInput.removeAttribute('required');
+
+            // Show a "logged in" badge
+            const form = document.getElementById('checkoutForm');
+            if (form) {
+                const badge = document.createElement('div');
+                badge.style.cssText = 'background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:8px;padding:8px 14px;font-size:0.82rem;color:#10b981;margin-bottom:14px;';
+                badge.textContent = '✓ Logged in as ' + (user.name || user.email);
+                form.prepend(badge);
+            }
+        })();
+
+        // ── MAIN CHECKOUT FUNCTION ────────────────────────────────────────────
+        async function handleCheckout() {
+            const firstName = document.getElementById('checkoutFirstName').value.trim();
+            const lastName  = document.getElementById('checkoutLastName').value.trim();
+            const email     = document.getElementById('checkoutEmail').value.trim();
+            const phone     = document.getElementById('checkoutPhone').value.trim();
+            const pwEl      = document.getElementById('checkoutPassword');
+            const pwWrap    = document.getElementById('passwordFieldWrapper');
+            const pwVisible = pwWrap && pwWrap.style.display !== 'none';
+            const password  = pwVisible ? pwEl.value.trim() : null;
+
+            if (!firstName || !email || !phone) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            // STEP 1: Auth — signup new user or login existing one via real API
+            if (!authBridge.isLoggedIn()) {
+                if (!password) { alert('Please enter a password.'); return; }
+                const authRes = await authBridge.signupOrLogin({
+                    name: firstName + ' ' + lastName,
+                    email,
+                    password
+                });
+                if (!authRes.success) {
+                    alert('Auth error: ' + (authRes.error || 'Failed'));
+                    return;
+                }
+            }
+
+            // ──────────────────────────────────────────────────────────────────
+            // STEP 2: Create Razorpay order via backend API
+            //
+            // IMPORTANT: Replace the cartItems below with your actual product.
+            // The product must exist in the MongoDB products collection.
+            // The ID can be the product's MongoDB _id or any identifier your
+            // /api/create-order endpoint accepts.
+            // ──────────────────────────────────────────────────────────────────
+            const cartItems = [
+                { id: 'YOUR_PRODUCT_MONGO_ID_HERE' }   // ← Replace with real product ID
+            ];
+
+            const orderPayload = await authBridge.createOrder(cartItems, null);
+            if (!orderPayload || !orderPayload.success) {
+                alert('Order creation failed: ' + (orderPayload && orderPayload.error));
+                return;
+            }
+
+            // STEP 3: Open Razorpay popup
+            const rzpOptions = {
+                key: orderPayload.keyId,
+                amount: orderPayload.amount,
+                currency: orderPayload.currency || 'INR',
+                name: 'DigiVault Premium',
+                description: 'Your Product Name Here',        // ← Update description
+                order_id: orderPayload.orderId,
+                prefill: { name: firstName + ' ' + lastName, email, contact: phone },
+                theme: { color: '#8b5cf6' },
+                handler: async function(response) {
+                    // STEP 4: Verify payment signature via backend
+                    const verifyRes = await authBridge.verifyPayment({
+                        razorpay_order_id: response.razorpay_order_id,
+                        razorpay_payment_id: response.razorpay_payment_id,
+                        razorpay_signature: response.razorpay_signature,
+                        cartItems,
+                        couponCode: null
+                    });
+
+                    if (verifyRes && verifyRes.success) {
+                        alert('Payment successful! Redirecting to your locker...');
+                        // STEP 5: Redirect to main app dashboard
+                        // Session carries over automatically via shared localStorage token
+                        window.location.href = 'index.html#user-dashboard';
+                    } else {
+                        alert('Verification failed: ' + (verifyRes && verifyRes.error));
+                    }
+                },
+                modal: {
+                    ondismiss: function() { alert('Checkout was cancelled.'); }
+                }
+            };
+
+            try {
+                new window.Razorpay(rzpOptions).open();
+            } catch(e) {
+                alert('Failed to open Razorpay: ' + e.message);
+            }
+        }
+    </script>
+</body>
+</html>

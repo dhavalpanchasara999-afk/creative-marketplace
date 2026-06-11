@@ -69,7 +69,7 @@ export async function POST(req) {
 
             response.headers.set(
                 'Set-Cookie',
-                `digivault_auth_token=${token}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=604800`
+                `digivault_auth_token=${token}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=604800`
             );
 
             return response;
@@ -97,7 +97,7 @@ export async function POST(req) {
 
             response.headers.set(
                 'Set-Cookie',
-                `digivault_auth_token=${token}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=604800`
+                `digivault_auth_token=${token}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=604800`
             );
 
             return response;
@@ -108,3 +108,4 @@ export async function POST(req) {
         return NextResponse.json({ error: e.message }, { status: 500 });
     }
 }
+

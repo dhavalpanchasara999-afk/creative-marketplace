@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,6 +9,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- DigiVault Shared Config & Auth Bridge -->
+    <script src="site-config.js"></script>
+    <script src="auth-bridge.js"></script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="style.css">
@@ -505,7 +508,7 @@
                     <span style="color: var(--accent-purple); font-weight:800;">₹९९/- फक्त</span>
                 </div>
                 
-                <form id="marathiFontsCheckoutForm" onsubmit="handleCheckoutSubmit(event)">
+                <form id="checkoutForm" onsubmit="event.preventDefault(); handleMarathiCheckout();">
                     <!-- Name Fields -->
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
                         <div>
@@ -531,7 +534,7 @@
                     </div>
 
                     <!-- Password field for locker creation -->
-                    <div style="margin-bottom: 18px;">
+                    <div id="passwordFieldWrapper" style="margin-bottom: 18px;">
                         <label style="font-size: 0.75rem; color: var(--text-muted); display: block; margin-bottom: 4px;">लॉकर पासवर्ड सेट करा (Create Locker Password)</label>
                         <input type="password" id="checkoutPassword" placeholder="••••••••" required style="width: 100%; background: var(--bg-darker); border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 4px; color: var(--text-white); font-family:inherit;">
                         <span style="font-size:0.68rem; color:var(--text-dim); margin-top:3px; display:block;">या पासवर्डद्वारे तुम्ही भविष्यात कधीही तुमचे खरेदी केलेले फॉन्ट्स पुन्हा डाऊनलोड करू शकाल.</span>
@@ -615,251 +618,241 @@
 
     <!-- INTERACTIVE JAVASCRIPT LOGIC -->
     <script>
-        // --- RAZORPAY CONFIGURATION ---
-        // Set to your real Razorpay Key ID (starts with 'rzp_test_' or 'rzp_live_') to activate real payments!
-        // If kept as 'rzp_test_YOUR_KEY_HERE', the checkout will run in simulated/testing mockup mode automatically.
-        const RAZORPAY_KEY_ID = 'rzp_test_YOUR_KEY_HERE';
-
         // Initialize Lucide Icons
         lucide.createIcons();
 
-        // 1. DYNAMIC SESSION-PERSISTENT 30-MINUTE TIMER
-        function startUrgencyTimer() {
+        // ── 1. COUNTDOWN TIMER ────────────────────────────────────────────────────
+        (function initCountdown() {
             const timerKey = 'marathi_fonts_timer_deadline';
+            const DURATION_MS = 30 * 60 * 1000;
             let deadline = localStorage.getItem(timerKey);
-            
-            // Set new 30 minute deadline if not exists or if expired
-            const now = new Date().getTime();
-            if (!deadline || now > parseInt(deadline)) {
-                const thirtyMinutesLater = now + (30 * 60 * 1000);
-                localStorage.setItem(timerKey, thirtyMinutesLater.toString());
-                deadline = thirtyMinutesLater.toString();
+            if (!deadline || Date.now() > parseInt(deadline)) {
+                deadline = Date.now() + DURATION_MS;
+                localStorage.setItem(timerKey, deadline.toString());
             }
-            
-            const timerInterval = setInterval(() => {
-                const currentTime = new Date().getTime();
-                const remaining = parseInt(deadline) - currentTime;
-                
+            const el = document.getElementById('countdownTimerText');
+            function tick() {
+                const remaining = parseInt(localStorage.getItem(timerKey)) - Date.now();
                 if (remaining <= 0) {
-                    // Loop timer back to 30 min quietly to maintain urgency without breaking layout
-                    const nextDeadline = new Date().getTime() + (30 * 60 * 1000);
+                    const nextDeadline = Date.now() + DURATION_MS;
                     localStorage.setItem(timerKey, nextDeadline.toString());
-                    deadline = nextDeadline.toString();
                     return;
                 }
-                
-                const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
-                
-                const displayMin = minutes < 10 ? '0' + minutes : minutes;
-                const displaySec = seconds < 10 ? '0' + seconds : seconds;
-                
-                document.getElementById('countdownTimerText').textContent = `${displayMin}:${displaySec}`;
-            }, 1000);
-        }
-        
-        startUrgencyTimer();
-
-        // 2. TOGGLE ACCORDION FAQS
-        function toggleFaq(item) {
-            const isActive = item.classList.contains('active');
-            
-            // Close all others
-            document.querySelectorAll('.faq-compact-item').forEach(el => {
-                el.classList.remove('active');
-                const icon = el.querySelector('[data-lucide="chevron-up"]');
-                if (icon) {
-                    icon.setAttribute('data-lucide', 'chevron-down');
-                }
-            });
-            
-            if (!isActive) {
-                item.classList.add('active');
+                const m = String(Math.floor(remaining / 60000)).padStart(2, '0');
+                const s = String(Math.floor((remaining % 60000) / 1000)).padStart(2, '0');
+                if (el) el.textContent = m + ':' + s;
             }
-            
+            tick();
+            setInterval(tick, 1000);
+        })();
+
+        // ── 2. FAQ ACCORDION ──────────────────────────────────────────────────────
+        function toggleFaq(el) {
+            const body = el.nextElementSibling;
+            const isOpen = body.style.maxHeight && body.style.maxHeight !== '0px';
+            document.querySelectorAll('.faq-body').forEach(b => b.style.maxHeight = '0px');
+            document.querySelectorAll('.faq-icon').forEach(ic => {
+                ic.setAttribute('data-lucide', 'chevron-down');
+            });
+            if (!isOpen) {
+                body.style.maxHeight = body.scrollHeight + 'px';
+                const icon = el.querySelector('[data-lucide]');
+                if (icon) icon.setAttribute('data-lucide', 'chevron-up');
+            }
             lucide.createIcons();
         }
 
-        // 3. TOAST NOTIFICATION UTILITY
-        function showCustomToast(title, message, type = 'success') {
+        // ── 3. TOAST NOTIFICATIONS ────────────────────────────────────────────────
+        function showCustomToast(title, message, type = 'info') {
+            const iconMap = { success: 'check-circle', error: 'x-circle', info: 'info' };
+            const iconName = iconMap[type] || 'info';
             const toast = document.createElement('div');
-            toast.className = 'toast-notification';
-            toast.style.borderColor = type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6';
-            
-            const iconName = type === 'success' ? 'check-circle' : type === 'error' ? 'alert-triangle' : 'info';
-            
+            toast.style.cssText = `
+                position:fixed; bottom:24px; right:24px; z-index:999999;
+                background:var(--bg-card); border:1px solid var(--border-color);
+                border-radius:12px; padding:14px 18px; max-width:340px;
+                box-shadow:0 8px 32px rgba(0,0,0,0.5); display:flex;
+                align-items:flex-start; gap:12px; animation:slideInToast 0.3s ease;
+            `;
             toast.innerHTML = `
-                <i data-lucide="${iconName}" style="width:20px; height:20px; color:${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};"></i>
-                <div style="text-align:left;">
-                    <div style="font-weight:700; color:var(--text-white); font-size:0.85rem; margin-bottom:2px;">${title}</div>
-                    <div style="font-size:0.75rem; color:var(--text-muted); line-height:1.3;">${message}</div>
+                <i data-lucide="${iconName}" style="width:20px; height:20px; color:${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'}; flex-shrink:0; margin-top:2px;"></i>
+                <div>
+                    <div style="font-weight:700; font-size:0.9rem; color:var(--text-white); margin-bottom:3px;">${title}</div>
+                    <div style="font-size:0.8rem; color:var(--text-muted); line-height:1.4;">${message}</div>
                 </div>
             `;
-            
+            if (!document.getElementById('toastStyle')) {
+                const style = document.createElement('style');
+                style.id = 'toastStyle';
+                style.textContent = '@keyframes slideInToast{from{transform:translateX(120%);opacity:0}to{transform:translateX(0);opacity:1}}';
+                document.head.appendChild(style);
+            }
             document.body.appendChild(toast);
             lucide.createIcons();
-            
-            setTimeout(() => {
-                toast.style.animation = 'slideOut 0.3s forwards';
-                setTimeout(() => toast.remove(), 300);
-            }, 4000);
+            setTimeout(() => toast.remove(), 4500);
         }
 
-        // Add slideOut keyframes
-        const styleSheet = document.createElement('style');
-        styleSheet.innerText = `
-            @keyframes slideOut {
-                to { transform: translateY(100px); opacity: 0; }
-            }
-        `;
-        document.head.appendChild(styleSheet);
+        // ── 4. PRE-FILL FORM IF USER ALREADY LOGGED IN ────────────────────────────
+        (function prefillIfLoggedIn() {
+            if (authBridge.isLoggedIn()) {
+                const user = authBridge.getUser();
+                if (!user) return;
+                const nameParts = (user.name || '').split(' ');
+                const fnEl = document.getElementById('checkoutFirstName');
+                const lnEl = document.getElementById('checkoutLastName');
+                const emEl = document.getElementById('checkoutEmail');
+                if (fnEl) fnEl.value = nameParts[0] || '';
+                if (lnEl) lnEl.value = nameParts.slice(1).join(' ') || '';
+                if (emEl) emEl.value = user.email || '';
 
-        // 4. SECURE CHECKOUT TRIGGER (SIMULATED OR REAL RAZORPAY)
-        function handleCheckoutSubmit(e) {
-            e.preventDefault();
-            
+                // Hide password field — user is already authenticated
+                const pwWrap = document.getElementById('checkoutPassword') &&
+                               document.getElementById('checkoutPassword').closest('.form-group, div');
+                if (pwWrap) pwWrap.style.display = 'none';
+
+                // Show a "logged in" badge near the form
+                const formTop = document.getElementById('checkoutForm');
+                if (formTop) {
+                    const badge = document.createElement('div');
+                    badge.style.cssText = 'background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:8px;padding:8px 14px;font-size:0.82rem;color:#10b981;margin-bottom:14px;display:flex;align-items:center;gap:8px;';
+                    badge.innerHTML = '<i data-lucide="shield-check" style="width:16px;"></i> Logged in as <strong style="margin-left:4px;">' + (user.name || user.email) + '</strong>';
+                    formTop.prepend(badge);
+                    lucide.createIcons();
+                }
+            }
+        })();
+
+        // ── 5. SECURE CHECKOUT TRIGGER (API-BACKED RAZORPAY) ─────────────────────
+        async function handleMarathiCheckout() {
             const firstName = document.getElementById('checkoutFirstName').value.trim();
-            const lastName = document.getElementById('checkoutLastName').value.trim();
-            const email = document.getElementById('checkoutEmail').value.trim();
-            const phone = document.getElementById('checkoutPhone').value.trim();
-            const password = document.getElementById('checkoutPassword').value.trim();
-            
-            if (!firstName || !lastName || !email || !phone || !password) {
-                showCustomToast("Form Error", "Please fill in all the billing fields.", "error");
+            const lastName  = document.getElementById('checkoutLastName').value.trim();
+            const email     = document.getElementById('checkoutEmail').value.trim();
+            const phone     = document.getElementById('checkoutPhone').value.trim();
+            const pwEl      = document.getElementById('checkoutPassword');
+            const password  = (pwEl && pwEl.closest('div') && pwEl.closest('div').style.display !== 'none')
+                              ? pwEl.value.trim() : null;
+
+            if (!firstName || !lastName || !email || !phone) {
+                showCustomToast('Form Error', 'Please fill in all the required billing fields.', 'error');
                 return;
             }
 
-            // Sync with local databases
-            const dbUsers = JSON.parse(localStorage.getItem('users') || '[]');
-            const dbOrders = JSON.parse(localStorage.getItem('orders') || '[]');
-
-            // Auto-signup/login simulation
-            let currentUser = dbUsers.find(u => u.email.toLowerCase() === email.toLowerCase());
-            if (!currentUser) {
-                currentUser = {
-                    name: firstName + ' ' + lastName,
-                    email: email,
-                    password: password,
-                    phone: phone,
-                    role: 'user'
-                };
-                dbUsers.push(currentUser);
-                localStorage.setItem('users', JSON.stringify(dbUsers));
-                showCustomToast("Account Created", "Success! Your dashboard locker has been initialized.", "success");
+            // Step A: Authenticate (signup or login via real API)
+            let authed = false;
+            if (authBridge.isLoggedIn()) {
+                authed = true;  // already logged in — skip signup/login
             } else {
-                currentUser.phone = phone;
-                localStorage.setItem('users', JSON.stringify(dbUsers));
-                showCustomToast("Welcome Back", "Existing email detected! Logged you in automatically.", "info");
+                if (!password) {
+                    showCustomToast('Password Required', 'Please enter a password to create your account.', 'error');
+                    return;
+                }
+                showCustomToast('Authenticating', 'Setting up your secure account...', 'info');
+                const authRes = await authBridge.signupOrLogin({
+                    name: firstName + ' ' + lastName,
+                    email,
+                    password
+                });
+                if (!authRes.success) {
+                    showCustomToast('Auth Error', authRes.error || 'Authentication failed. Please check your password.', 'error');
+                    return;
+                }
+                showCustomToast(
+                    authRes.isNewUser ? 'Account Created' : 'Welcome Back',
+                    authRes.isNewUser
+                        ? 'Your DigiVault account has been created!'
+                        : 'Existing account detected — logged in automatically.',
+                    'success'
+                );
+                authed = true;
             }
 
-            localStorage.setItem('active_user', JSON.stringify(currentUser));
+            if (!authed) return;
 
-            const saveSimulatedOrder = (paymentId) => {
-                const orderId = 'DV-' + Math.floor(100000 + Math.random() * 900000);
-                
-                const newOrder = {
-                    orderId: orderId,
-                    userEmail: currentUser.email,
-                    products: [
-                        { 
-                            id: 'marathi_fonts_pack', 
-                            title: '300+ Premium Marathi Fonts & Offline Converter Tool', 
-                            downloadUrl: 'https://drive.google.com/uc?export=download&id=fonts_vault_zip_mock'
-                        }
-                    ],
-                    totalPaid: 99,
-                    gateway: paymentId.startsWith('pay_mock') ? 'Simulated API' : 'Razorpay API',
-                    date: new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' }),
-                    status: 'Paid',
-                    paymentId: paymentId
-                };
+            showCustomToast('Connecting Razorpay', 'Initializing secure order...', 'info');
 
-                dbOrders.push(newOrder);
-                localStorage.setItem('orders', JSON.stringify(dbOrders));
+            // Step B: Create Razorpay order via backend API
+            // Cart item for this landing page product
+            const MARATHI_FONTS_PRODUCT_SLUG = 'marathi-fonts-pack';
+            const cartItems = [{ id: MARATHI_FONTS_PRODUCT_SLUG, slug: MARATHI_FONTS_PRODUCT_SLUG }];
 
-                console.log(`[EMAIL DISPATCH] 300+ Marathi Fonts & Offline Converter delivered to ${currentUser.email} for order ${orderId}.`);
-                
-                // Show payment success
-                showCustomToast("Razorpay Payment Success", `Dhanyavad, ${firstName}! Payment successful! Your 300+ Marathi Fonts Pack & Converter Tool are now unlocked inside your Digital Locker!`, "success");
-                
-                // Redirect directly to user-dashboard in main app
-                setTimeout(() => {
-                    window.location.href = 'index.html#user-dashboard';
-                }, 1000);
+            // Try to find the product ID from the DB first (the API/create-order will resolve by slug or ID)
+            const orderPayload = await authBridge.createOrder(cartItems, null);
+            if (!orderPayload || !orderPayload.success) {
+                showCustomToast('Order Error', (orderPayload && orderPayload.error) || 'Failed to create order. Please try again.', 'error');
+                return;
+            }
+
+            const keyId = orderPayload.keyId || '';
+
+            // Step C: Open Razorpay Checkout popup
+            const options = {
+                key: keyId,
+                amount: orderPayload.amount,
+                currency: orderPayload.currency || 'INR',
+                name: 'DigiVault Premium',
+                description: '300+ Premium Marathi Fonts Pack & Converter Tool',
+                order_id: orderPayload.orderId,
+                prefill: {
+                    name: firstName + ' ' + lastName,
+                    email: email,
+                    contact: phone
+                },
+                theme: { color: '#7c3aed' },
+                handler: async function(response) {
+                    // Step D: Verify payment signature via backend
+                    const verifyOverlay = document.createElement('div');
+                    verifyOverlay.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(6,7,10,0.96);display:flex;align-items:center;justify-content:center;z-index:999999;font-family:Outfit,sans-serif;';
+                    verifyOverlay.innerHTML = `
+                        <div style="background:var(--bg-card);border:1px solid var(--border-color);padding:36px;border-radius:16px;max-width:400px;width:90%;text-align:center;">
+                            <div style="font-size:2rem;font-weight:900;color:#7c3aed;margin-bottom:16px;">DigiVault</div>
+                            <div style="border:3px solid transparent;border-top-color:#7c3aed;border-radius:50%;width:40px;height:40px;margin:0 auto 20px;animation:spin 1s linear infinite;"></div>
+                            <h4 style="font-size:1.05rem;font-weight:800;color:#fff;margin-bottom:8px;">Verifying Payment</h4>
+                            <p style="font-size:0.8rem;color:var(--text-muted);">Securing your digital purchase. Please wait...</p>
+                        </div>
+                        <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+                    `;
+                    document.body.appendChild(verifyOverlay);
+
+                    const verifyRes = await authBridge.verifyPayment({
+                        razorpay_order_id: response.razorpay_order_id,
+                        razorpay_payment_id: response.razorpay_payment_id,
+                        razorpay_signature: response.razorpay_signature,
+                        cartItems: cartItems,
+                        couponCode: null
+                    });
+
+                    document.body.removeChild(verifyOverlay);
+
+                    if (verifyRes && verifyRes.success) {
+                        showCustomToast(
+                            'Payment Successful!',
+                            'Dhanyavad ' + firstName + '! Your Marathi Fonts Pack is now unlocked in your Digital Locker!',
+                            'success'
+                        );
+                        // Redirect to main app dashboard — user session carries over via shared localStorage token
+                        setTimeout(() => {
+                            window.location.href = 'index.html#user-dashboard';
+                        }, 1500);
+                    } else {
+                        showCustomToast(
+                            'Verification Failed',
+                            (verifyRes && verifyRes.error) || 'Payment verification failed. Contact support@digivault.co.in.',
+                            'error'
+                        );
+                    }
+                },
+                modal: {
+                    ondismiss: function() {
+                        showCustomToast('Checkout Cancelled', 'The payment popup was closed. Your cart is still waiting.', 'info');
+                    }
+                }
             };
 
-            // Switch between simulated mode or real Razorpay checkout
-            if (RAZORPAY_KEY_ID === 'rzp_test_YOUR_KEY_HERE') {
-                // RUN SIMULATED CHECKOUT OVERLAY (For quick testing without credentials)
-                const processingOverlay = document.createElement('div');
-                processingOverlay.style.position = 'fixed';
-                processingOverlay.style.top = '0';
-                processingOverlay.style.left = '0';
-                processingOverlay.style.width = '100vw';
-                processingOverlay.style.height = '100vh';
-                processingOverlay.style.background = 'rgba(6, 7, 10, 0.96)';
-                processingOverlay.style.display = 'flex';
-                processingOverlay.style.flexDirection = 'column';
-                processingOverlay.style.alignItems = 'center';
-                processingOverlay.style.justifyContent = 'center';
-                processingOverlay.style.zIndex = '999999';
-                processingOverlay.style.color = '#fff';
-                processingOverlay.style.fontFamily = 'Outfit, sans-serif';
-                processingOverlay.style.textAlign = 'center';
-                
-                processingOverlay.innerHTML = `
-                    <div style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 36px; border-radius: 16px; max-width: 400px; width: 90%; box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
-                        <div style="font-size:2.2rem; font-weight:900; color:#3b82f6; margin-bottom:12px; letter-spacing:0.5px;">Razorpay</div>
-                        <div style="border: 3px solid transparent; border-top-color: #3b82f6; border-radius: 50%; width: 44px; height: 44px; margin: 24px auto; animation: spin 1s linear infinite;"></div>
-                        <h4 style="font-size: 1.1rem; margin-bottom: 8px; font-weight: 800;">Processing Razorpay Transaction</h4>
-                        <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;">Connecting to mobile banking server... Please do not hit back button or close this tab.</p>
-                        <div style="font-size: 0.8rem; color: #3b82f6; font-weight: 700; background: rgba(59,130,246,0.1); padding: 6px 14px; border-radius: 100px; display: inline-block; border: 1px solid rgba(59,130,246,0.15);">Simulated Sandbox Mode Active</div>
-                    </div>
-                    <style>
-                        @keyframes spin {
-                            to { transform: rotate(360deg); }
-                        }
-                    </style>
-`;
-                
-                document.body.appendChild(processingOverlay);
-
-                setTimeout(() => {
-                    document.body.removeChild(processingOverlay);
-                    saveSimulatedOrder('pay_mock_' + Math.random().toString(36).substring(2, 10));
-                }, 2500);
-            } else {
-                // LAUNCH REAL LIVE RAZORPAY STANDARD WEB PAYMENT POPUP!
-                const options = {
-                    "key": RAZORPAY_KEY_ID,
-                    "amount": 9900, // ₹99 = 9900 Paise (subunit)
-                    "currency": "INR",
-                    "name": "DigiVault Premium",
-                    "description": "300+ Premium Marathi Fonts Pack & Converter Tool",
-                    "theme": {
-                        "color": "#7c3aed" // Theme purple accent
-                    },
-                    "prefill": {
-                        "name": firstName + " " + lastName,
-                        "email": email,
-                        "contact": phone
-                    },
-                    "handler": function (response) {
-                        saveSimulatedOrder(response.razorpay_payment_id);
-                    },
-                    "modal": {
-                        "ondismiss": function() {
-                            showCustomToast("Payment Cancelled", "The Razorpay payment popup was closed before completing checkout.", "error");
-                        }
-                    }
-                };
-                
-                try {
-                    const rzp = new Razorpay(options);
-                    rzp.open();
-                } catch(err) {
-                    showCustomToast("Integration Error", "Failed to load Razorpay window. Please check your Key ID.", "error");
-                }
+            try {
+                const rzp = new window.Razorpay(options);
+                rzp.open();
+            } catch (err) {
+                showCustomToast('Integration Error', 'Failed to load Razorpay. Please refresh the page and try again.', 'error');
             }
         }
     </script>

@@ -1,4 +1,4 @@
-export async function sendEmail({ to, subject, html }) {
+﻿export async function sendEmail({ to, subject, html }) {
     const RESEND_API_KEY = process.env.RESEND_API_KEY;
     if (!RESEND_API_KEY) {
         console.warn('[EMAIL WARNING] RESEND_API_KEY is not defined. Email simulation mode active.');
@@ -36,6 +36,8 @@ export async function sendEmail({ to, subject, html }) {
 }
 
 export async function sendPurchaseEmail({ to, orderId, products, totalPaid }) {
+    const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://digivault.co.in';
+
     const productsListHtml = products.map(p => `
         <tr style="border-bottom: 1px solid rgba(255,255,255,0.06);">
             <td style="padding: 12px 0; color: #ffffff; font-weight: 600;">${p.title}</td>
@@ -68,11 +70,11 @@ export async function sendPurchaseEmail({ to, orderId, products, totalPaid }) {
             
             <div style="background: rgba(255,255,255,0.02); padding: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.04); margin-bottom: 30px; display: flex; justify-content: space-between;">
                 <span style="color: #9ca3af;">Total Paid</span>
-                <strong style="color: #3b82f6; font-size: 1.1rem;">₹${totalPaid}</strong>
+                <strong style="color: #3b82f6; font-size: 1.1rem;">&#8377;${totalPaid}</strong>
             </div>
             
             <div style="text-align: center;">
-                <a href="http://localhost:3000" style="display: inline-block; background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); color: #ffffff; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 0.95rem; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);">
+                <a href="${SITE_URL}" style="display: inline-block; background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); color: #ffffff; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 0.95rem; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);">
                     Go to Dashboard Locker
                 </a>
             </div>

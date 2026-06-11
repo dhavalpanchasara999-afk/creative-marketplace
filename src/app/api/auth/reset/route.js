@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+﻿import { NextResponse } from 'next/server';
 import { connectToDatabase, User } from '../../../../lib/db';
 import { hashPassword } from '../../../../lib/auth';
 import { sendEmail } from '../../../../lib/email';
@@ -30,11 +30,16 @@ export async function POST(req) {
                 { expiresIn: '1h' }
             );
 
-            const origin = req.headers.get('origin') || 'http://localhost:3000';
-            const resetLink = `${origin}/?resetToken=${resetToken}`;
+            // Use NEXT_PUBLIC_SITE_URL env var to guarantee the link always points to
+            // the custom domain (digivault.co.in), not the Vercel deployment URL.
+            const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://digivault.co.in';
+            const resetLink = `${siteUrl}/?resetToken=${resetToken}`;
 
             const htmlContent = `
                 <div style="font-family: 'Outfit', 'Inter', sans-serif; background: #06070a; color: #f3f4f6; padding: 40px; border-radius: 12px; max-width: 600px; margin: 0 auto; border: 1px solid rgba(255,255,255,0.06);">
+                    <div style="text-align: center; margin-bottom: 24px;">
+                        <span style="font-size: 1.5rem; font-weight: 900; letter-spacing: 1px; background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">DIGIVAULT</span>
+                    </div>
                     <h2 style="color: #ffffff; font-size: 1.8rem; margin-bottom: 20px;">Reset Your Password</h2>
                     <p style="color: #9ca3af; font-size: 1rem; line-height: 1.6; margin-bottom: 24px;">
                         We received a request to reset the password for your DigiVault account. Click the button below to choose a new password. This link is valid for 1 hour.
