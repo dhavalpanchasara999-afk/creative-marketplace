@@ -94,8 +94,8 @@ const OrderSchema = new mongoose.Schema({
 // D. Homepage Dynamic CMS Configurations Schema
 const CMSConfigSchema = new mongoose.Schema({
     brandName: { type: String, default: "DigiVault" },
-    brandDomain: { type: String, default: "digivault.in" },
-    supportEmail: { type: String, default: "support@digivault.in" },
+    brandDomain: { type: String, default: "digivault.co.in" },
+    supportEmail: { type: String, default: "support@digivault.co.in" },
     logoUrl: { type: String, default: "" },
     logoHeight: { type: String, default: "52px" },
     primaryColor: { type: String, default: "#3b82f6" },

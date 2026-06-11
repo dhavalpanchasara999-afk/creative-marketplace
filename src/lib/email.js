@@ -14,7 +14,7 @@ export async function sendEmail({ to, subject, html }) {
                 'Authorization': `Bearer ${RESEND_API_KEY}`
             },
             body: JSON.stringify({
-                from: 'DigiVault <onboarding@resend.dev>',
+                from: 'DigiVault <support@digivault.co.in>',
                 to: [to],
                 subject: subject,
                 html: html
@@ -78,7 +78,7 @@ export async function sendPurchaseEmail({ to, orderId, products, totalPaid }) {
             </div>
             
             <p style="color: #6b7280; font-size: 0.8rem; text-align: center; margin-top: 40px; border-top: 1px solid rgba(255,255,255,0.04); padding-top: 20px;">
-                Need help? Contact support@digivault.in
+                Need help? Contact support@digivault.co.in
             </p>
         </div>
     `;
