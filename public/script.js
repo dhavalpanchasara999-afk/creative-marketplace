@@ -221,9 +221,9 @@ const INITIAL_CATEGORIES = [
 
 const INITIAL_CMS_CONFIG = {
     brandName: "DigiVault",
-    brandDomain: "digivault.in",
+    brandDomain: "digivault.co.in",
     heroBg: "",
-    supportEmail: "support@digivault.in",
+    supportEmail: "support@digivault.co.in",
     logoUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuCdERfxvscrw9MZOLZxbaEZTBme3y0v-I795Oblk90GRbwajZKrVuCwIznmDf2PScUjdQf54FUcgFRiJc-_qGqXiEMCu3y2Zy05GrcGiXDcCuq-5Xla9PVAULpPtNxJcXQrGJlCaCe1IDQ1Fd699SDs8HtIWqmeO2BjbZDw4cgA0-ohG8aF5Y1Z8e-Qn2Y9h9cKsrdq9YXovNk1tGSID5fV4oqkgX245hdh2AegWCzuO2oaVUUXOrdp_wULt7lkwOrjBTxbP5Awf1sb",
     logoHeight: "52px",
     primaryColor: "#3b82f6",
@@ -245,15 +245,15 @@ const INITIAL_CMS_CONFIG = {
     contactSub: "Have an issue with your digital locker, or need custom licensing? Our dedicated customer success team is here to assist you.",
     
     // Dynamic Policies HTML
-    policyTerms: `<h1>Terms & Conditions</h1>\n<p>Welcome to <strong>DigiVault</strong> (digivault.in). By using our digital marketplace website, you agree to comply with and be bound by the following Terms and Conditions of service.</p>\n<h3>1. Licensing and Intellectual Property</h3>\n<p>All digital products sold on DigiVault (including templates, e-books, courses, vector fonts, and graphics assets) are protected under global intellectual property laws. Upon purchasing, you receive a Personal and Commercial Project License. However, you are strictly prohibited from reselling, sub-licensing, redistributing, or sharing the actual download files to third parties.</p>\n<h3>2. Access and Digital Downloads Locker</h3>\n<p>Upon successfully purchasing a product, access keys will be generated and logged to your personal User Dashboard. Download links are stored in your secure locker with anti-sharing protocols.</p>`,
+    policyTerms: `<h1>Terms & Conditions</h1>\n<p>Welcome to <strong>DigiVault</strong> (digivault.co.in). By using our digital marketplace website, you agree to comply with and be bound by the following Terms and Conditions of service.</p>\n<h3>1. Licensing and Intellectual Property</h3>\n<p>All digital products sold on DigiVault (including templates, e-books, courses, vector fonts, and graphics assets) are protected under global intellectual property laws. Upon purchasing, you receive a Personal and Commercial Project License. However, you are strictly prohibited from reselling, sub-licensing, redistributing, or sharing the actual download files to third parties.</p>\n<h3>2. Access and Digital Downloads Locker</h3>\n<p>Upon successfully purchasing a product, access keys will be generated and logged to your personal User Dashboard. Download links are stored in your secure locker with anti-sharing protocols.</p>`,
     
-    policyPrivacy: `<h1>Privacy Policy</h1>\n<p>Your privacy is of critical importance to us. This Privacy Policy details the types of personal data we collect when you visit DigiVault Technologies (digivault.in) and how we secure it.</p>\n<h3>1. Collection of Personal Data</h3>\n<p>We collect essential information to set up your account profile and verify download keys, including Display Name, Mobile Number, and Deliverable Email address.</p>`,
+    policyPrivacy: `<h1>Privacy Policy</h1>\n<p>Your privacy is of critical importance to us. This Privacy Policy details the types of personal data we collect when you visit DigiVault Technologies (digivault.co.in) and how we secure it.</p>\n<h3>1. Collection of Personal Data</h3>\n<p>We collect essential information to set up your account profile and verify download keys, including Display Name, Mobile Number, and Deliverable Email address.</p>`,
     
     policyRefund: `<h1>Refund & Return Policy</h1>\n<p>At <strong>DigiVault</strong>, we are dedicated to providing premium digital files, courses, and design assets. Because our files are instantly downloadable upon payment, please review our refund limits carefully:</p>\n<h3>1. Downloadable Digital Products are Non-Returnable</h3>\n<p>Since digital files cannot be physically returned or revoked, all catalog purchases are strictly non-refundable once checkout is complete and links are generated.</p>`,
 
     // About Us Editor Default
     aboutHeading: "About DigiVault",
-    aboutContentHTML: `<p>DigiVault is a premium startup-style digital products marketplace engineered for creative designers, freelance developers, and high-performance digital marketers.</p>\n<p>We believe that high-quality assets (such as customizable templates, high-definition fonts, specialized e-books, and modular vectors) should not carry astronomical, budget-breaking costs. Our core mission is to curate the absolute highest tier of digital files and bundle them at accessible prices for creators worldwide.</p>\n<h3>Our Operations</h3>\n<p>Registered legally as <strong>DigiVault Technologies</strong>, we operate out of our primary administrative offices in New Delhi:</p>\n<ul>\n    <li><strong>Registered Address:</strong> 3rd Floor, Connaught Place, New Delhi, Delhi 110001, India</li>\n    <li><strong>Support Helpline:</strong> support@digivault.in</li>\n</ul>`
+    aboutContentHTML: `<p>DigiVault is a premium startup-style digital products marketplace engineered for creative designers, freelance developers, and high-performance digital marketers.</p>\n<p>We believe that high-quality assets (such as customizable templates, high-definition fonts, specialized e-books, and modular vectors) should not carry astronomical, budget-breaking costs. Our core mission is to curate the absolute highest tier of digital files and bundle them at accessible prices for creators worldwide.</p>\n<h3>Our Operations</h3>\n<p>Registered legally as <strong>DigiVault Technologies</strong>, we operate out of our primary administrative offices in New Delhi:</p>\n<ul>\n    <li><strong>Registered Address:</strong> 3rd Floor, Connaught Place, New Delhi, Delhi 110001, India</li>\n    <li><strong>Support Helpline:</strong> support@digivault.co.in</li>\n</ul>`
 };
 
 const FEATURE_BENEFITS = [
@@ -296,8 +296,8 @@ let COUPONS = getDb('coupons', [
     { code: "WELCOME10", discountPercent: 10 }
 ]);
 let USERS = getDb('users', [
-    { name: "DigiVault Admin", email: "admin@digivault.in", password: "admin123", role: "admin" },
-    { name: "Creative User", email: "user@digivault.in", password: "user123", role: "user" }
+    { name: "DigiVault Admin", email: "admin@digivault.co.in", password: "admin123", role: "admin" },
+    { name: "Creative User", email: "user@digivault.co.in", password: "user123", role: "user" }
 ]);
 let ORDERS = getDb('orders', []);
 let ACTIVE_USER = getDb('active_user', null);
@@ -305,7 +305,7 @@ let CART = getDb('cart', []);
 let APPLIED_COUPON = null;
 
 // Routing Views Config
-const VIEWS = ['homeView', 'shopView', 'detailView', 'loginView', 'signupView', 'userDashboardView', 'adminDashboardView', 'termsView', 'privacyView', 'refundView', 'aboutView', 'contactView'];
+const VIEWS = ['homeView', 'shopView', 'detailView', 'loginView', 'signupView', 'forgotPasswordView', 'resetPasswordCompletionView', 'userDashboardView', 'adminDashboardView', 'termsView', 'privacyView', 'refundView', 'aboutView', 'contactView'];
 let currentView = 'homeView';
 
 // --- 3. TOAST & NOTIFICATION ENGINES ---
@@ -364,6 +364,14 @@ function triggerSocialPurchaseAlert() {
 
 // --- 4. CORE ROUTING CONTROLLER ---
 function routeTo(viewName) {
+    // If navigating to anything other than reset-password, clear the token from URL so it doesn't persist
+    if (viewName !== 'reset-password') {
+        const url = new URL(window.location);
+        if (url.searchParams.has('resetToken')) {
+            url.searchParams.delete('resetToken');
+            window.history.replaceState({}, document.title, url.toString());
+        }
+    }
     const targetMap = {
         'home': 'homeView',
         'shop': 'shopView',
@@ -428,8 +436,40 @@ function routeTo(viewName) {
     // Trigger page-specific renders
     if (viewName === 'home') renderHomeView();
     if (viewName === 'shop') renderShopView();
-    if (viewName === 'user-dashboard') renderUserDashboard();
-    if (viewName === 'admin-dashboard') renderAdminDashboard();
+    if (viewName === 'user-dashboard') {
+        renderUserDashboard();
+        // Reset user dashboard tabs to the first tab (Downloads Locker)
+        const userDashboard = document.getElementById('userDashboardView');
+        if (userDashboard) {
+            const navItems = userDashboard.querySelectorAll('.dash-sidebar-nav .dash-nav-item');
+            const tabContents = userDashboard.querySelectorAll('.dash-tab-content');
+            navItems.forEach((btn, idx) => {
+                if (idx === 0) btn.classList.add('active-dash');
+                else btn.classList.remove('active-dash');
+            });
+            tabContents.forEach((tab, idx) => {
+                if (idx === 0) tab.classList.add('active');
+                else tab.classList.remove('active');
+            });
+        }
+    }
+    if (viewName === 'admin-dashboard') {
+        renderAdminDashboard();
+        // Reset admin dashboard tabs to the first tab (Metrics Overview)
+        const adminDashboard = document.getElementById('adminDashboardView');
+        if (adminDashboard) {
+            const navItems = adminDashboard.querySelectorAll('.dash-sidebar-nav .dash-nav-item');
+            const tabContents = adminDashboard.querySelectorAll('.admin-tab-content');
+            navItems.forEach((btn, idx) => {
+                if (idx === 0) btn.classList.add('active-dash');
+                else btn.classList.remove('active-dash');
+            });
+            tabContents.forEach((tab, idx) => {
+                if (idx === 0) tab.classList.add('active');
+                else tab.classList.remove('active');
+            });
+        }
+    }
 
     // Setup Admin customized floating panel state
     const floatingCmsTrigger = document.getElementById('floatingCmsTrigger');
