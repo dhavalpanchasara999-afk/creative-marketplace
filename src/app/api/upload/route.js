@@ -2,17 +2,17 @@ import { NextResponse } from 'next/server';
 import { v2 as cloudinary } from 'cloudinary';
 import { getAuthenticatedUser } from '../../../lib/auth';
 
-// Configure Cloudinary
-cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET
-});
-
 export const dynamic = 'force-dynamic';
 
 export async function POST(req) {
     try {
+        // Configure Cloudinary dynamically inside the request handler
+        cloudinary.config({
+            cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+            api_key: process.env.CLOUDINARY_API_KEY,
+            api_secret: process.env.CLOUDINARY_API_SECRET
+        });
+
         // 1. Authenticate user (Admin only)
         const sessionUser = getAuthenticatedUser(req);
         if (!sessionUser || sessionUser.role !== 'admin') {
