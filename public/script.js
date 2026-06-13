@@ -533,6 +533,7 @@ function syncNavActions() {
             </div>
         `;
         lucide.createIcons();
+
     } else {
         btnAuth.classList.remove('hide');
         badge.classList.add('hide');
@@ -887,6 +888,7 @@ function renderCartItems() {
             </div>
         `;
         lucide.createIcons();
+
         document.getElementById('cartSubtotalText').textContent = '₹ 0.00';
         return;
     }
@@ -911,6 +913,7 @@ function renderCartItems() {
     let couponInfo = APPLIED_COUPON ? `<span style="font-size:0.75rem; color:var(--accent-green); display:block;">(Applied Coupon: ${APPLIED_COUPON.code} -${APPLIED_COUPON.discountPercent}%)</span>` : '';
     document.getElementById('cartSubtotalText').innerHTML = `₹ ${sub.toLocaleString('en-IN')} ${couponInfo}`;
     lucide.createIcons();
+
 }
 
 function handleCouponApply() {
@@ -1220,6 +1223,7 @@ function renderHomeView() {
             homeProductsGrid.appendChild(catSection);
         });
         lucide.createIcons();
+
     }
 
     // Features and benefits list
@@ -1426,6 +1430,7 @@ function renderShopCatalog() {
                 </div>
             `;
             lucide.createIcons();
+
             return;
         }
 
@@ -1454,6 +1459,7 @@ function renderShopCatalog() {
             grid.appendChild(card);
         });
         lucide.createIcons();
+
     }, 450);
 }
 
@@ -1589,6 +1595,7 @@ function loadProductDetails(productId) {
             ${relatedHtml}
         `;
         lucide.createIcons();
+
     }, 400);
 }
 
@@ -1643,6 +1650,7 @@ function renderUserDashboard() {
                 </div>
             `;
             lucide.createIcons();
+
         } else {
             purchasedProducts.forEach(item => {
                 const card = document.createElement('div');
@@ -1660,6 +1668,7 @@ function renderUserDashboard() {
                 downloadsContainer.appendChild(card);
             });
             lucide.createIcons();
+
         }
     }
 
@@ -1987,6 +1996,8 @@ function showProductModalForm() {
     document.getElementById('productFormTitle').textContent = "Add New Product";
     document.getElementById('prodFormId').value = '';
     document.getElementById('adminProductForm').reset();
+      if (typeof updateDropzonePreview === "function") updateDropzonePreview("");
+
     
     document.getElementById('productFormModal').classList.add('open');
 }
@@ -2011,6 +2022,8 @@ function editProduct(productId) {
     document.getElementById('prodFormSalePriceInput').value = prod.salePrice;
     document.getElementById('prodFormOriginalPriceInput').value = prod.originalPrice;
     document.getElementById('prodFormThumbnailInput').value = prod.thumbnail;
+      if (typeof updateDropzonePreview === "function") updateDropzonePreview(prod.thumbnail);
+
     document.getElementById('prodFormZipUrlInput').value = prod.downloadUrl;
     document.getElementById('prodFormTagsInput').value = prod.tags;
     document.getElementById('prodFormFeaturedInput').checked = !!prod.featured;
@@ -2280,6 +2293,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Init Lucide Icons bindings
     lucide.createIcons();
+      if (typeof initCloudinaryUpload === "function") initCloudinaryUpload();
+
 
     // Launch social proof purchase popups loop
     setTimeout(() => {
@@ -2324,6 +2339,7 @@ function startHeroSlider() {
             </div>
         `;
         lucide.createIcons();
+
         return;
     }
 
@@ -2476,6 +2492,7 @@ function startHeroSlider() {
         }
         
         lucide.createIcons();
+
     };
     
     renderSlides();
@@ -2569,5 +2586,147 @@ function handleResetPasswordCompletionSubmit(e) {
         }
     }).catch(err => {
         showToast("Error", "Network connection error", "error");
+    });
+}
+
+// --- CLOUDINARY IMAGE UPLOAD ENGINE ---
+
+function updateDropzonePreview(url) {
+    const placeholder = document.getElementById('dropzonePlaceholder');
+    const preview = document.getElementById('dropzonePreview');
+    const progress = document.getElementById('uploadProgressContainer');
+    const previewImg = document.getElementById('imagePreviewImg');
+
+    if (!placeholder || !preview || !progress || !previewImg) return;
+
+    progress.style.display = 'none';
+    if (url && (url.startsWith('http') || url.startsWith('assets/'))) {
+        previewImg.src = url;
+        preview.style.display = 'flex';
+        placeholder.style.display = 'none';
+    } else {
+        previewImg.src = '';
+        preview.style.display = 'none';
+        placeholder.style.display = 'flex';
+    }
+}
+
+async function uploadProductImage(file) {
+    const placeholder = document.getElementById('dropzonePlaceholder');
+    const preview = document.getElementById('dropzonePreview');
+    const progress = document.getElementById('uploadProgressContainer');
+    const previewImg = document.getElementById('imagePreviewImg');
+    const urlInput = document.getElementById('prodFormThumbnailInput');
+
+    if (!placeholder || !preview || !progress || !previewImg || !urlInput) return;
+
+    // Show loading spinner
+    placeholder.style.display = 'none';
+    preview.style.display = 'none';
+    progress.style.display = 'flex';
+
+    // Get authorization token for headers
+    const token = localStorage.getItem('digivault_auth_token');
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+        const response = await fetch('/api/upload', {
+            method: 'POST',
+            headers: {
+                ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+            },
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+            // Update preview and input value
+            previewImg.src = data.url;
+            urlInput.value = data.url;
+            
+            // Show preview
+            progress.style.display = 'none';
+            preview.style.display = 'flex';
+            showToast("Upload Successful", "Product image uploaded to Cloudinary CDN!", "success");
+        } else {
+            throw new Error(data.error || 'Upload failed');
+        }
+    } catch (e) {
+        console.error(e);
+        // Reset state
+        progress.style.display = 'none';
+        if (urlInput.value) {
+            previewImg.src = urlInput.value;
+            preview.style.display = 'flex';
+        } else {
+            placeholder.style.display = 'flex';
+        }
+        showToast("Upload Failed", e.message || "Could not upload image to server.", "error");
+    }
+}
+
+function initCloudinaryUpload() {
+    const dropzone = document.getElementById('imageUploadDropzone');
+    const fileSelect = document.getElementById('prodFormFileSelect');
+    const btnRemove = document.getElementById('btnRemoveImage');
+    const urlInput = document.getElementById('prodFormThumbnailInput');
+
+    if (!dropzone || !fileSelect || !btnRemove || !urlInput) return;
+
+    // Dropzone click -> trigger file select dialog
+    dropzone.addEventListener('click', (e) => {
+        // Prevent click cascade if clicking the remove button
+        if (e.target.closest('#btnRemoveImage')) return;
+        fileSelect.click();
+    });
+
+    // File input changes
+    fileSelect.addEventListener('change', (e) => {
+        if (e.target.files && e.target.files.length > 0) {
+            uploadProductImage(e.target.files[0]);
+        }
+    });
+
+    // Drag-and-drop drag events
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropzone.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropzone.classList.add('dragover');
+        }, false);
+    });
+
+    ['dragleave', 'dragend', 'drop'].forEach(eventName => {
+        dropzone.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropzone.classList.remove('dragover');
+        }, false);
+    });
+
+    // File drop event
+    dropzone.addEventListener('drop', (e) => {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        if (files && files.length > 0) {
+            uploadProductImage(files[0]);
+        }
+    }, false);
+
+    // Remove image button
+    btnRemove.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        fileSelect.value = '';
+        urlInput.value = '';
+        updateDropzonePreview('');
+    });
+
+    // Manual typing/pasting updates thumbnail preview
+    urlInput.addEventListener('input', (e) => {
+        updateDropzonePreview(e.target.value.trim());
     });
 }
