@@ -18,7 +18,7 @@
 const authBridge = (() => {
 
     const TOKEN_KEY = 'digivault_auth_token';
-    const USER_KEY  = 'active_user';
+    const USER_KEY  = 'digivault_active_user'; // Matches script.js saveDb('active_user') which prefixes 'digivault_'
 
     // ── Token helpers ──────────────────────────────────────────────────────────
     function getToken() {
