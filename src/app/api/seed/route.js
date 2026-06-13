@@ -155,16 +155,18 @@ export async function POST(req) {
                 status: 'enabled'
             },
             {
-                title: 'Marathi Calligraphy Fonts',
-                slug: 'marathi-calligraphy-fonts',
-                description: 'Exclusive collection of 200+ Marathi calligraphy and Devanagari fonts for designers.',
+                title: '300+ Premium Marathi Fonts & Converter',
+                slug: 'marathi-fonts-pack',
+                description: 'Get 300+ premium Marathi calligraphy, bold display, and modern sans-serif fonts plus a free offline Unicode converter tool. Instant delivery.',
+                shortDescription: '300+ Premium calligraphy, display & sans-serif Marathi fonts with offline converter tool.',
+                customLandingUrl: '/marathi-fonts',
                 category: 'fonts',
                 rating: 5,
-                salePrice: 249,
-                originalPrice: 999,
-                thumbnail: defaultThumb,
+                salePrice: 99,
+                originalPrice: 1999,
+                thumbnail: 'assets/marathi_fonts_bundle_box.png',
                 downloadUrl: 'https://drive.google.com/uc?export=download&id=fonts_vault_zip_mock',
-                tags: ['marathi', 'calligraphy', 'devanagari', 'fonts'],
+                tags: ['marathi', 'fonts', 'calligraphy', 'converter', 'banner', 'devanagari'],
                 featured: true,
                 status: 'enabled'
             }
