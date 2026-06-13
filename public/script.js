@@ -1,4 +1,4 @@
-/*
+﻿/*
 ========================================================================
    DIGIVAULT CENTRAL DYNAMIC OPERATIONS ENGINE (LocalStorage Full-Stack SPA)
 ========================================================================
@@ -196,7 +196,7 @@ const INITIAL_PRODUCTS = [
         slug: "marathi-fonts-pack",
         description: "Get 1000+ premium Marathi calligraphy, bold display, and modern sans-serif fonts plus a free offline converter tool for ₹99. Instant delivery.",
         shortDescription: "300+ Premium calligraphy, display & sans-serif Marathi fonts with conversion tool.",
-        customLandingUrl: "marathi-fonts.html",
+        customLandingUrl: "/marathi-fonts",
         category: "Graphic Assets",
         rating: 5,
         salePrice: 99,

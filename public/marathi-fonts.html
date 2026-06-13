@@ -705,10 +705,10 @@
                 if (lnEl) lnEl.value = nameParts.slice(1).join(' ') || '';
                 if (emEl) emEl.value = user.email || '';
 
-                // Hide password field — user is already authenticated
-                const pwWrap = document.getElementById('checkoutPassword') &&
-                               document.getElementById('checkoutPassword').closest('.form-group, div');
+                // Hide password field and remove required - user is already authenticated
+                const pwWrap = document.getElementById('passwordFieldWrapper');
                 if (pwWrap) pwWrap.style.display = 'none';
+                const pwInput = document.getElementById('checkoutPassword'); if (pwInput) { pwInput.removeAttribute('required'); pwInput.value = '__logged_in__'; }
 
                 // Show a "logged in" badge near the form
                 const formTop = document.getElementById('checkoutForm');
@@ -729,8 +729,8 @@
             const email     = document.getElementById('checkoutEmail').value.trim();
             const phone     = document.getElementById('checkoutPhone').value.trim();
             const pwEl      = document.getElementById('checkoutPassword');
-            const password  = (pwEl && pwEl.closest('div') && pwEl.closest('div').style.display !== 'none')
-                              ? pwEl.value.trim() : null;
+            const pwWrapVisible = document.getElementById('passwordFieldWrapper') && document.getElementById('passwordFieldWrapper').style.display !== 'none';
+            const password  = pwWrapVisible ? pwEl.value.trim() : null;
 
             if (!firstName || !lastName || !email || !phone) {
                 showCustomToast('Form Error', 'Please fill in all the required billing fields.', 'error');
